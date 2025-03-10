@@ -1,0 +1,71 @@
+.todo-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .add-task-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .task-input {
+    flex: 1;
+    padding: 14px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    color: black;
+    font-size: 16px;
+  }
+  
+  .task-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .add-button {
+    padding: 8px 20px;
+    background-color: #0f3c63;
+    font-weight: bold;
+    font-size: 13px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .task-list {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    padding: 15px;
+  }
+  
+  .task-list h2 {
+    color: #0f3c63;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    color: black;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .task-item:last-child {
+    border-bottom: none;
+  }
+  
+  .task-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }

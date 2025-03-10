@@ -1,0 +1,73 @@
+:root {
+  font-family: 'Lato', sans-serif;
+}
+
+.drawer {
+  width: 300px; 
+  position: fixed;
+  top: 0;
+  left: -300px; /* versdchiebt sich 300px nach links*/
+  height: 100%;
+  background-color: #0f3c63;
+  box-shadow: none;
+  transition: left 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.drawer.open {
+  left: 0;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+}
+
+.drawer-content {
+  padding: 0px;
+}
+
+.close-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: white;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #ffcc00;
+  background-color: #0a2842;
+  border-radius: 15px;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+  margin: 0 0; /* top&buttom ... left&right */
+  padding: 1rem 1rem;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+li:hover {
+  color: #ffcc00;
+  background-color: #0a2842;
+  border-radius: 15px;
+}
+
+
+
+h3 {
+  
+  margin: 1rem 1rem 1.5rem;
+  font-size: 2rem;
+  color: white;
+}
