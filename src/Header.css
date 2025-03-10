@@ -19,6 +19,7 @@
   font-weight: bold;
   text-align: center;
   margin: 0;
+  cursor: pointer;
 }
 
 .icon-button {
@@ -45,3 +46,12 @@
   transform: scale(1.2); /* consistent */
 }
   
+.header-link {
+  text-decoration: none;
+  color: #0f3c63;
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin: none;
+  padding: none;
+}

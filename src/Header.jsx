@@ -22,7 +22,7 @@ const Header = () => {
           >
             <img src={menuIcon} alt="Menu" className="icon" />
           </button>
-          <h1 className="header-title">BlindowTime</h1>
+          <a href="/../index.html" className="header-link"><h1 className="header-title">BlindowTime</h1></a>
         </div>
         <img src={bellIcon} alt="Notifications" className="icon" />
       </div>
