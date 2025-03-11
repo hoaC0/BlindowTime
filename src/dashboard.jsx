@@ -115,7 +115,7 @@ const Dashboard = () => {
                 {/* ToDo-Karte */}
                 <div className="dashboard-card">
                     <div className="card-header">
-                        <h2>ToDo</h2>
+                        <h2>Aufgabenliste</h2>
                         <button 
                             className="view-all"
                             onClick={() => window.location.href = 'todo.html'}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './notification.css';
 
-const Notification = () => {
+const Notification = ({ bellIcon }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [hasUnread, setHasUnread] = useState(false);
@@ -18,12 +18,12 @@ const Notification = () => {
       },
       {
         id: 2,
-        message: "Willkommen zum neuen Semester! Bitte denken Sie daran, alle wichtigen Dokumente bis zum Ende des Monats einzureichen.",
+        message: "Die Prüfungsergebnisse für Mathematik sind jetzt verfügbar.",
         time: "Vor 15 min"
       },
       {
         id: 3,
-        message: "Willkommen zum neuen Semester! Bitte denken Sie daran, alle wichtigen Dokumente bis zum Ende des Monats einzureichen.",
+        message: "Erinnerung: Morgen findet die Exkursion zum Technologiemuseum statt.",
         time: "Gestern"
       }
     ];
@@ -61,10 +61,10 @@ const Notification = () => {
   return (
     <>
       {/* Glocken-Symbol zum Öffnen des Panels */}
-      <button className="notification-trigger" onClick={togglePanel}>
-        <span className="notification-bell">🔔</span>
+      <div className="notification-trigger" onClick={togglePanel}>
+        <img src={bellIcon} alt="Notifications" className="icon" />
         {hasUnread && <span className="notification-dot"></span>}
-      </button>
+      </div>
 
       {/* Benachrichtigungspanel */}
       <div 
@@ -72,7 +72,7 @@ const Notification = () => {
         className={`notification-panel ${isOpen ? 'open' : ''}`}
       >
         <div className="notification-header">
-          <h2>Sekretariat Nachrichten</h2>
+          <h2>Benachrichtigungen</h2>
           <button className="notification-close" onClick={() => setIsOpen(false)}>
             ✕
           </button>

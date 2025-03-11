@@ -41,7 +41,7 @@ const AdminDashboard = () => {
                     className={`tab-button ${selectedTab === 'classes' ? 'active' : ''}`}
                     onClick={() => setSelectedTab('classes')}
                 >
-                    Klassen
+                    Stundenplan verwalten
                 </button>
                 <button 
                     className={`tab-button ${selectedTab === 'notifications' ? 'active' : ''}`}
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
 
             {selectedTab === 'classes' && (
                 <div className="class-list">
-                    <h2>Klassen verwalten</h2>
+                    <h2>Klassen</h2>
                     <div className="class-grid">
                         {classes.map((cls) => (
                             <div key={cls.id} className="class-card" onClick={() => window.location.href = `/admin/class.html?id=${cls.id}`}>

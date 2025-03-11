@@ -3,6 +3,7 @@ import './header.css';
 import menuIcon from './assets/menu.svg';
 import bellIcon from './assets/bell.svg';
 import Drawer from './drawer';
+import Notification from './notification';
 
 const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -24,7 +25,7 @@ const Header = () => {
           </button>
           <a href="/../index.html" className="header-link"><h1 className="header-title">BlindowTime</h1></a>
         </div>
-        <img src={bellIcon} alt="Notifications" className="icon" />
+        <Notification bellIcon={bellIcon} />
       </div>
       <Drawer isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
     </div>
