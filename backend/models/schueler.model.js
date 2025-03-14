@@ -3,8 +3,8 @@ import db from '../config/db.config.js';
 class SchuelerModel {
     static async getAllSchueler() {
         try {
-            // Wir verwenden die Spalten aus deiner Datenbank
-            const [rows] = await db.query('SELECT schueler_id, vorname, nachname, geburtsdatum, klassen_id, adresse, tel, email FROM schueler ORDER BY nachname, vorname');
+            // Using klasse_id to match database schema
+            const [rows] = await db.query('SELECT schueler_id, vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email FROM schueler ORDER BY nachname, vorname');
             return rows;
         } catch (error) {
             console.error('SchuelerModel.getAllSchueler:', error);
@@ -14,7 +14,7 @@ class SchuelerModel {
 
     static async getSchuelerById(id) {
         try {
-            const [rows] = await db.query('SELECT schueler_id, vorname, nachname, geburtsdatum, klassen_id, adresse, tel, email FROM schueler WHERE schueler_id = ?', [id]);
+            const [rows] = await db.query('SELECT schueler_id, vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email FROM schueler WHERE schueler_id = ?', [id]);
             return rows[0];
         } catch (error) {
             console.error('SchuelerModel.getSchuelerById:', error);
@@ -24,7 +24,7 @@ class SchuelerModel {
 
     static async getSchuelerByKlasse(klassenId) {
         try {
-            const [rows] = await db.query('SELECT schueler_id, vorname, nachname, geburtsdatum, klassen_id, adresse, tel, email FROM schueler WHERE klassen_id = ? ORDER BY nachname, vorname', [klassenId]);
+            const [rows] = await db.query('SELECT schueler_id, vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email FROM schueler WHERE klasse_id = ? ORDER BY nachname, vorname', [klassenId]);
             return rows;
         } catch (error) {
             console.error('SchuelerModel.getSchuelerByKlasse:', error);
@@ -34,10 +34,10 @@ class SchuelerModel {
 
     static async createSchueler(schuelerData) {
         try {
-            const { vorname, nachname, geburtsdatum, klassen_id, adresse, tel, email } = schuelerData;
+            const { vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email } = schuelerData;
             const [result] = await db.query(
-                'INSERT INTO schueler (vorname, nachname, geburtsdatum, klassen_id, adresse, tel, email) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [vorname, nachname, geburtsdatum, klassen_id, adresse, tel, email]
+                'INSERT INTO schueler (vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email]
             );
             return result.insertId;
         } catch (error) {
@@ -48,10 +48,10 @@ class SchuelerModel {
 
     static async updateSchueler(id, schuelerData) {
         try {
-            const { vorname, nachname, geburtsdatum, klassen_id, adresse, tel, email } = schuelerData;
+            const { vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email } = schuelerData;
             const [result] = await db.query(
-                'UPDATE schueler SET vorname = ?, nachname = ?, geburtsdatum = ?, klassen_id = ?, adresse = ?, tel = ?, email = ? WHERE schueler_id = ?',
-                [vorname, nachname, geburtsdatum, klassen_id, adresse, tel, email, id]
+                'UPDATE schueler SET vorname = ?, nachname = ?, geburtsdatum = ?, klasse_id = ?, adresse = ?, tel = ?, email = ? WHERE schueler_id = ?',
+                [vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email, id]
             );
             return result.affectedRows > 0;
         } catch (error) {

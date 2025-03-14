@@ -142,7 +142,7 @@ const AdminDashboard = () => {
             vorname: student.vorname || '',
             nachname: student.nachname || '',
             geburtsdatum: formattedBirthDate,
-            klassen_id: student.klassen_id || '',
+            klassen_id: student.klasse_id || '',
             adresse: student.adresse || '',
             tel: student.tel || '',
             email: student.email || ''
@@ -401,9 +401,9 @@ const AdminDashboard = () => {
                                     <div className="form-group">
                                         <label htmlFor="klassen_id">Klasse</label>
                                         <select
-                                            id="klassen_id"
-                                            name="klassen_id"
-                                            value={studentFormData.klassen_id}
+                                            id="klasse_id"
+                                            name="klasse_id"
+                                            value={studentFormData.klasse_id}
                                             onChange={handleStudentFormChange}
                                             required
                                         >

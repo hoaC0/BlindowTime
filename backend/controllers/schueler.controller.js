@@ -36,7 +36,19 @@ export const getSchuelerByKlasse = async (req, res) => {
 
 export const createSchueler = async (req, res) => {
   try {
-    const schuelerId = await SchuelerModel.createSchueler(req.body);
+    console.log('Request body received:', req.body);
+    
+    // Check if we need to rename the field from klassen_id to klasse_id
+    let schuelerData = { ...req.body };
+    if ('klassen_id' in schuelerData && !('klasse_id' in schuelerData)) {
+      console.log('Renaming klassen_id to klasse_id');
+      schuelerData.klasse_id = schuelerData.klassen_id;
+      delete schuelerData.klassen_id;
+    }
+    
+    console.log('Processed data to save:', schuelerData);
+    
+    const schuelerId = await SchuelerModel.createSchueler(schuelerData);
     res.status(201).json({ schueler_id: schuelerId, message: 'Schüler erfolgreich erstellt' });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -45,8 +57,18 @@ export const createSchueler = async (req, res) => {
 
 export const updateSchueler = async (req, res) => {
   try {
+    console.log('Update request body received:', req.body);
+    
+    // Check if we need to rename the field from klassen_id to klasse_id
+    let schuelerData = { ...req.body };
+    if ('klassen_id' in schuelerData && !('klasse_id' in schuelerData)) {
+      console.log('Renaming klassen_id to klasse_id in update');
+      schuelerData.klasse_id = schuelerData.klassen_id;
+      delete schuelerData.klassen_id;
+    }
+    
     const id = req.params.id;
-    const success = await SchuelerModel.updateSchueler(id, req.body);
+    const success = await SchuelerModel.updateSchueler(id, schuelerData);
     
     if (!success) {
       return res.status(404).json({ message: 'Schüler nicht gefunden' });
