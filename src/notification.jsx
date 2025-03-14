@@ -6,25 +6,46 @@ const Notification = ({ bellIcon }) => {
   const [notifications, setNotifications] = useState([]);
   const [hasUnread, setHasUnread] = useState(false);
   const panelRef = useRef(null);
+  const triggerRef = useRef(null);
 
-  // Beispiel-Benachrichtigungen (in einer echten App würden diese vom Backend kommen)
+  // demo notifications (in a real app these would come from the backend)
   useEffect(() => {
-    // Simuliere das Laden von Benachrichtigungen
+    // simulate loading notifications
     const demoNotifications = [
       {
         id: 1,
-        message: "Willkommen zum neuen Semester! Bitte denken Sie daran, alle wichtigen Dokumente bis zum Ende des Monats einzureichen.",
-        time: "Vor 5 min"
+        title: "Sekretariat",
+        message: "Neuer Stundenplan für nächste Woche verfügbar",
+        time: "vor 2 Stunden",
+        avatar: "S"
       },
       {
         id: 2,
-        message: "Die Prüfungsergebnisse für Mathematik sind jetzt verfügbar.",
-        time: "Vor 15 min"
+        title: "Klassenlehrer",
+        message: "Elternabend am 15. März um 19:00 Uhr",
+        time: "vor 5 Stunden",
+        avatar: "K"
       },
       {
         id: 3,
-        message: "Erinnerung: Morgen findet die Exkursion zum Technologiemuseum statt.",
-        time: "Gestern"
+        title: "Schuldirektor",
+        message: "Schulausflug zum Technikmuseum am 20. März",
+        time: "vor 1 Tag",
+        avatar: "D"
+      },
+      {
+        id: 4,
+        title: "Sekretariat",
+        message: "Bitte Anmeldeformulare für die Projektwoche bis Freitag abgeben",
+        time: "vor 2 Tagen",
+        avatar: "S"
+      },
+      {
+        id: 5,
+        title: "IT-Abteilung",
+        message: "Wartungsarbeiten am Schulnetzwerk am Wochenende",
+        time: "vor 3 Tagen",
+        avatar: "I"
       }
     ];
     
@@ -32,22 +53,27 @@ const Notification = ({ bellIcon }) => {
     setHasUnread(true);
   }, []);
 
-  // Öffnen/Schließen des Benachrichtigungspanels
-  const togglePanel = () => {
+  // toggle notification panel
+  const togglePanel = (e) => {
+    e.stopPropagation();
     setIsOpen(!isOpen);
     
-    // Benachrichtigungen als gelesen markieren, wenn Panel geöffnet wird
+    // mark notifications as read when panel is opened
     if (!isOpen) {
       setHasUnread(false);
     }
   };
 
-  // Klick außerhalb des Panels schließt es
+  // close panel when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (panelRef.current && !panelRef.current.contains(event.target) && 
-          !event.target.classList.contains('notification-bell') &&
-          !event.target.closest('.notification-trigger')) {
+      if (
+        isOpen && 
+        panelRef.current && 
+        !panelRef.current.contains(event.target) &&
+        triggerRef.current && 
+        !triggerRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
@@ -56,37 +82,54 @@ const Notification = ({ bellIcon }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [isOpen]);
+
+  // close panel on escape key
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscKey);
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [isOpen]);
 
   return (
     <>
-      {/* Glocken-Symbol zum Öffnen des Panels */}
-      <div className="notification-trigger" onClick={togglePanel}>
-        <img src={bellIcon} alt="Notifications" className="icon" />
+      {/* bell icon */}
+      <div 
+        className="notification-trigger" 
+        onClick={togglePanel}
+        ref={triggerRef}
+      >
+        <img src={bellIcon} alt="Benachrichtigungen" className="icon" />
         {hasUnread && <span className="notification-dot"></span>}
       </div>
 
-      {/* Benachrichtigungspanel */}
+      {/* notification panel */}
       <div 
         ref={panelRef}
         className={`notification-panel ${isOpen ? 'open' : ''}`}
       >
         <div className="notification-header">
           <h2>Benachrichtigungen</h2>
-          <button className="notification-close" onClick={() => setIsOpen(false)}>
-            ✕
-          </button>
         </div>
         
         <div className="notification-content">
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               <div key={notification.id} className="notification-item">
-                <div className="notification-message">
-                  {notification.message}
+                <div className="notification-avatar">
+                  <span className="notification-avatar-letter">{notification.avatar}</span>
                 </div>
-                <div className="notification-time">
-                  {notification.time}
+                <div className="notification-content-wrapper">
+                  <div className="notification-title">{notification.title}</div>
+                  <div className="notification-message">{notification.message}</div>
+                  <div className="notification-time">{notification.time}</div>
                 </div>
               </div>
             ))
@@ -96,6 +139,12 @@ const Notification = ({ bellIcon }) => {
             </div>
           )}
         </div>
+        
+        {notifications.length > 0 && (
+          <div className="more-notifications">
+            Alle Benachrichtigungen ansehen
+          </div>
+        )}
       </div>
     </>
   );
