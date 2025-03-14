@@ -4,15 +4,15 @@ import './adminDashboard.css';
 const AdminDashboard = () => {
     // Sample class data - in a real app this would come from a database
     const [classes, setClasses] = useState([
-        { id: 1, name: "BTA25", teacher: "Fr. Müller" },
-        { id: 2, name: "BTA26", teacher: "Hr. Schmidt" },
-        { id: 3, name: "GD25", teacher: "Hr. Fischer" },
-        { id: 4, name: "GD26", teacher: "Fr. Wagner" },
-        { id: 5, name: "GD27", teacher: "Hr. Weber" },
-        { id: 6, name: "ITA25", teacher: "Fr. Knaber" },
-        { id: 7, name: "ITA26", teacher: "Hr. Schneider" },
-        { id: 8, name: "PTA25", teacher: "Fr. Schuster" },
-        { id: 9, name: "PTA26", teacher: "Hr. Schuster" },
+        { id: 1, name: "BTA24", teacher: "Fr. Müller" },
+        { id: 2, name: "BTA25", teacher: "Hr. Schmidt" },
+        { id: 3, name: "GD23", teacher: "Hr. Fischer" },
+        { id: 4, name: "GD24", teacher: "Fr. Wagner" },
+        { id: 5, name: "GD25", teacher: "Hr. Weber" },
+        { id: 6, name: "ITA24", teacher: "Fr. Knaber" },
+        { id: 7, name: "ITA25", teacher: "Hr. Schneider" },
+        { id: 8, name: "PTA24", teacher: "Fr. Schuster" },
+        { id: 9, name: "PTA25", teacher: "Hr. Schuster" },
 
     ]);
 

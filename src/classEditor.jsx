@@ -23,6 +23,35 @@ const ClassEditor = () => {
     "18:15 - 19:00",
     "19:15 - 20:00",
   ]);
+
+  // Sample data for dropdowns (would come from database in real app)
+  const [subjectOptions] = useState([
+    { value: "Mathematik", label: "Mathematik" },
+    { value: "Deutsch", label: "Deutsch" },
+    { value: "Englisch", label: "Englisch" },
+    { value: "Physik", label: "Physik" },
+    { value: "Chemie", label: "Chemie" },
+    { value: "Biologie", label: "Biologie" },
+    { value: "Geschichte", label: "Geschichte" },
+    { value: "Informatik", label: "Informatik" }
+  ]);
+  
+  const [teacherOptions] = useState([
+    { value: "Fr. Müller", label: "Fr. Müller" },
+    { value: "Hr. Schmidt", label: "Hr. Schmidt" },
+    { value: "Fr. Weber", label: "Fr. Weber" },
+    { value: "Hr. Schneider", label: "Hr. Schneider" },
+    { value: "Fr. Fischer", label: "Fr. Fischer" }
+  ]);
+  
+  const [roomOptions] = useState([
+    { value: "101", label: "Raum 101" },
+    { value: "102", label: "Raum 102" },
+    { value: "203", label: "Raum 203" },
+    { value: "204", label: "Raum 204" },
+    { value: "PC-Lab 1", label: "PC-Labor 1" },
+    { value: "PC-Lab 2", label: "PC-Labor 2" }
+  ]);
   
   // State for the schedule data
   const [schedule, setSchedule] = useState(Array(times.length).fill().map(() => Array(days.length).fill(null)));
@@ -43,10 +72,10 @@ const ClassEditor = () => {
     if (classId) {
       // Sample data
       const classNames = {
-        "1": "Klasse 10A",
-        "2": "Klasse 11B",
-        "3": "Klasse 12C",
-        "4": "Klasse 9D"
+        "1": "ITA25 - Informatiktechnische Assistenten",
+        "2": "BTA26 - Biologisch-technische Assistenten",
+        "3": "GD25 - Gestaltungstechnische Assistenten",
+        "4": "PTA26 - Pharmazeutisch-technische Assistenten"
       };
       
       setClassName(classNames[classId] || 'Unbekannte Klasse');
@@ -81,7 +110,7 @@ const ClassEditor = () => {
     setSelectedCell({ timeIndex: -1, dayIndex: -1 });
   };
 
-  const handleInputChange = (e) => {
+  const handleSelectChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -162,50 +191,79 @@ const ClassEditor = () => {
         ))}
       </div>
 
-      {/* Modal for editing */}
+      {/* Modern Modal for editing */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3>Unterricht bearbeiten</h3>
+            <div className="modal-header">
+              <h3>Unterricht bearbeiten</h3>
+              <button className="close-modal-button" onClick={closeModal}>&times;</button>
+            </div>
+            
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="subject">Fach</label>
-                <input 
-                  type="text" 
+                <select 
                   id="subject" 
                   name="subject" 
                   value={formData.subject} 
-                  onChange={handleInputChange}
-                  placeholder="Fach eingeben"
-                />
+                  onChange={handleSelectChange}
+                  className="form-select"
+                >
+                  <option value="">Bitte wählen...</option>
+                  {subjectOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
+              
               <div className="form-group">
                 <label htmlFor="teacher">Lehrer</label>
-                <input 
-                  type="text" 
+                <select 
                   id="teacher" 
                   name="teacher" 
                   value={formData.teacher} 
-                  onChange={handleInputChange}
-                  placeholder="Lehrer eingeben"
-                />
+                  onChange={handleSelectChange}
+                  className="form-select"
+                >
+                  <option value="">Bitte wählen...</option>
+                  {teacherOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
+              
               <div className="form-group">
                 <label htmlFor="room">Raum</label>
-                <input 
-                  type="text" 
+                <select 
                   id="room" 
                   name="room" 
                   value={formData.room} 
-                  onChange={handleInputChange}
-                  placeholder="Raum eingeben"
-                />
+                  onChange={handleSelectChange}
+                  className="form-select"
+                >
+                  <option value="">Bitte wählen...</option>
+                  {roomOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
+              
               <div className="modal-buttons">
-                <button type="button" className="delete-button" onClick={handleDelete}>Löschen</button>
-                <div>
+                <button type="button" className="delete-button" onClick={handleDelete}>
+                  <span className="button-icon">🗑️</span> Löschen
+                </button>
+                <div className="action-buttons">
                   <button type="button" className="cancel-button" onClick={closeModal}>Abbrechen</button>
-                  <button type="submit" className="save-button">Speichern</button>
+                  <button type="submit" className="save-button">
+                    <span className="button-icon">✓</span> Speichern
+                  </button>
                 </div>
               </div>
             </form>

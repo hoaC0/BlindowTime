@@ -2,28 +2,36 @@
   max-width: 1200px;
   margin: 20px auto;
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  font-family: 'Lato', sans-serif;
 }
 
 .editor-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .editor-header h2 {
   margin: 0;
   color: #0f3c63;
+  font-size: 1.7rem;
+  font-weight: 600;
 }
 
 .back-button, .save-button {
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 10px 18px;
+  border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .back-button {
@@ -44,67 +52,85 @@
 
 .save-button:hover {
   background-color: #0a2842;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(15, 60, 99, 0.2);
 }
 
 /* Schedule grid */
 .schedule-grid {
   display: grid;
   grid-template-columns: 100px repeat(5, 1fr);
-  gap: 0;
+  gap: 1px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .schedule-cell {
-  border: 1px solid #dee2e6;
-  padding: 15px;
+  padding: 16px;
   text-align: center;
-  background-color: #f9fafb;
+  background-color: white;
   min-height: 60px;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .schedule-cell.header {
   background-color: #0f3c63;
   color: white;
-  font-weight: bold;
+  font-weight: 600;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: default;
+  padding: 14px;
+  font-size: 0.95rem;
 }
 
 .schedule-cell.time-cell {
-  font-weight: bold;
+  font-weight: 600;
   color: #0f3c63;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: default;
+  background-color: #f0f7ff;
 }
 
 .schedule-cell:hover:not(.header):not(.time-cell) {
-  background-color: #e0f2fe;
+  background-color: #f0f7ff;
+  transform: scale(1.03);
+  z-index: 10;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .schedule-cell.has-class {
   background-color: #e7f5ff;
+  border-left: 3px solid #0f3c63;
 }
 
 .cell-content {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 
 .subject {
-  font-weight: bold;
+  font-weight: 600;
   color: #0f3c63;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
 }
 
 .details {
   font-size: 0.8rem;
-  color: #666;
+  color: #555;
 }
 
 /* Modal */
@@ -119,25 +145,65 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal-content {
   background-color: white;
-  padding: 24px;
-  border-radius: 8px;
+  padding: 0;
+  border-radius: 12px;
   width: 100%;
   max-width: 500px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease;
+  overflow: hidden;
 }
 
-.modal-content h3 {
-  color: #0f3c63;
-  margin-top: 0;
-  margin-bottom: 20px;
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  background-color: #0f3c63;
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.close-modal-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.close-modal-button:hover {
+  transform: scale(1.2);
+}
+
+form {
+  padding: 24px;
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
@@ -145,14 +211,27 @@
   margin-bottom: 8px;
   font-weight: 500;
   color: #0f3c63;
+  font-size: 0.9rem;
 }
 
-.form-group input {
+.form-select {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 16px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230f3c63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #0f3c63;
+  box-shadow: 0 0 0 3px rgba(15, 60, 99, 0.2);
 }
 
 .modal-buttons {
@@ -161,28 +240,73 @@
   margin-top: 24px;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 .delete-button {
-  background-color: #e53e3e;
-  color: white;
-  border: none;
+  background-color: #fff;
+  color: #dc3545;
+  border: 1px solid #dc3545;
   padding: 10px 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .cancel-button {
   background: none;
   border: 1px solid #ddd;
   padding: 10px 16px;
-  border-radius: 4px;
-  margin-right: 10px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .delete-button:hover {
-  background-color: #c53030;
+  background-color: #dc3545;
+  color: white;
 }
 
 .cancel-button:hover {
   background-color: #f0f0f0;
+}
+
+.button-icon {
+  font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .editor-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .editor-header h2 {
+    font-size: 1.4rem;
+  }
+  
+  .schedule-grid {
+    font-size: 0.85rem;
+  }
+  
+  .schedule-cell {
+    padding: 10px 5px;
+    min-height: 50px;
+  }
+  
+  .subject {
+    font-size: 0.8rem;
+  }
+  
+  .details {
+    font-size: 0.7rem;
+  }
 }
