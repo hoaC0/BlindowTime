@@ -1,0 +1,84 @@
+.schedule-container {
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.schedule-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #0f3c63;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #0f3c63;
+  padding: 5px 10px;
+}
+
+.nav-button:hover {
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: 100px repeat(5, 1fr);
+  gap: 0;
+}
+
+.schedule-cell {
+  border: 1px solid #dee2e6;
+  border-radius: 0px;
+  padding: 17.5px;
+  text-align: center;
+  background-color: #f9fafb;
+  transition: background-color 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.schedule-cell.header {
+  background-color: #0f3c63;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex; /* Add flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.schedule-cell.time-cell {
+  font-weight: bold;
+  color: #0f3c63;
+}
+
+.schedule-cell:hover {
+  background-color: #e0f2fe;
+  transform: scale(1.03);
+}
+
+@media (max-width: 600px) {
+  .schedule-grid {
+    grid-template-columns: 80px repeat(5, 1fr);
+  }
+
+  .schedule-cell {
+    font-size: 0.8rem;
+    padding: 12px;
+  }
+}
+
