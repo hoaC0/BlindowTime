@@ -39,7 +39,7 @@
   background-color: #0f3c63;
 }
 
-.class-list h2, .notification-panel h2 {
+.class-list h2, .notification-panel h2, .student-management h2 {
   color: #0f3c63;
   margin-bottom: 20px;
 }
@@ -90,7 +90,7 @@
   color: #0f3c63;
 }
 
-.form-group input, .form-group textarea {
+.form-group input, .form-group textarea, .form-group select {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
@@ -102,7 +102,7 @@
   resize: vertical;
 }
 
-.send-button {
+.send-button, .add-button, .save-button {
   background-color: #0f3c63;
   color: white;
   border: none;
@@ -114,6 +114,139 @@
   transition: background-color 0.2s;
 }
 
-.send-button:hover {
+.send-button:hover, .add-button:hover, .save-button:hover {
   background-color: #0a2842;
+}
+
+/* Neue Styles für Schülerverwaltung */
+.student-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.student-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.student-table th, .student-table td {
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  text-align: left;
+}
+
+.student-table th {
+  background-color: #f0f7ff;
+  color: #0f3c63;
+  font-weight: 600;
+}
+
+.student-table tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.student-table tr:hover {
+  background-color: #e7f5ff;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-button, .delete-button, .cancel-button {
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.edit-button {
+  background-color: #0f3c63;
+  color: white;
+  border: none;
+}
+
+.edit-button:hover {
+  background-color: #0a2842;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.cancel-button {
+  background-color: #f8f9fa;
+  color: #212529;
+  border: 1px solid #ddd;
+}
+
+.cancel-button:hover {
+  background-color: #e2e6ea;
+}
+
+.loading, .error-message {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+}
+
+.error-message {
+  color: #dc3545;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* Modal für Schülerformular */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  color: #0f3c63;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
 }
