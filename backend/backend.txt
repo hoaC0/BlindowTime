@@ -2,3 +2,6 @@ config      - Für Konfigurationsdateien (z.B. Datenbankverbindung)
 controllers - Enthält die Logik der API-Endpunkte
 models      - Für den Datenbankzugriff
 routes      - Definiert die API-Routen
+
+ // starten
+npm run dev:full
