@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './header.css';
+import './Header.css';
 import menuIcon from './assets/menu.svg';
 import bellIcon from './assets/bell.svg';
 import Drawer from './drawer';
