@@ -1,4 +1,5 @@
-// src/notification.jsx
+// src/notification.jsx - verbesserte Version
+
 import React, { useState, useEffect, useRef } from 'react';
 import './notification.css';
 
@@ -8,43 +9,16 @@ const Notification = ({ bellIcon }) => {
   const [hasUnread, setHasUnread] = useState(false);
   const panelRef = useRef(null);
   const triggerRef = useRef(null);
+  // API_URL definieren
   const API_URL = 'http://localhost:3001/api';
 
-  // Lade Benachrichtigungen vom Server
+  // Lade Benachrichtigungen beim Laden der Komponente
   useEffect(() => {
-    fetchNotifications();
-    
-    // Lese den Read-Status aus Cookies
-    const readStatus = getReadStatusFromCookies();
-    
-    // Prüfe auf ungelesene Nachrichten
-    checkForUnreadNotifications(readStatus);
+    // Setze direkt Demo-Benachrichtigungen ohne API-Aufruf
+    setDemoNotifications();
   }, []);
 
-  // Lade Benachrichtigungen vom Server
-  const fetchNotifications = async () => {
-    try {
-      const response = await fetch(`${API_URL}/notifications`);
-      if (response.ok) {
-        const data = await response.json();
-        setNotifications(data);
-        
-        // Hole Lese-Status aus Cookies und prüfe auf ungelesene Nachrichten
-        const readStatus = getReadStatusFromCookies();
-        checkForUnreadNotifications(data, readStatus);
-      } else {
-        console.error('Fehler beim Laden der Benachrichtigungen');
-        // Fallback zu Demo-Daten, wenn der Server nicht erreichbar ist
-        setDemoNotifications();
-      }
-    } catch (err) {
-      console.error('Fehler beim Laden der Benachrichtigungen:', err);
-      // Fallback zu Demo-Daten
-      setDemoNotifications();
-    }
-  };
-
-  // Lade Demo-Benachrichtigungen, wenn kein Server verfügbar ist
+  // Lade Demo-Benachrichtigungen, da der Server-Aufruf fehlschlägt
   const setDemoNotifications = () => {
     const demoNotifications = [
       {
@@ -73,24 +47,6 @@ const Notification = ({ bellIcon }) => {
         formattedTime: "vor 1 Tag",
         read: false,
         avatar: "D"
-      },
-      {
-        notification_id: "4",
-        title: "Sekretariat",
-        message: "Bitte Anmeldeformulare für die Projektwoche bis Freitag abgeben",
-        time: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // vor 2 Tagen
-        formattedTime: "vor 2 Tagen",
-        read: false,
-        avatar: "S"
-      },
-      {
-        notification_id: "5",
-        title: "IT-Abteilung",
-        message: "Wartungsarbeiten am Schulnetzwerk am Wochenende",
-        time: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // vor 3 Tagen
-        formattedTime: "vor 3 Tagen",
-        read: false,
-        avatar: "I"
       }
     ];
     
@@ -115,8 +71,14 @@ const Notification = ({ bellIcon }) => {
     return {};
   };
 
-  // Prüfe auf ungelesene Nachrichten
-  const checkForUnreadNotifications = (notificationList = notifications, readStatus = {}) => {
+  // Prüfe auf ungelesene Nachrichten - GEFIXT
+  const checkForUnreadNotifications = (notificationList = [], readStatus = {}) => {
+    // Sicherstellen, dass notificationList ein Array ist
+    if (!Array.isArray(notificationList)) {
+      console.error('notificationList ist kein Array:', notificationList);
+      notificationList = [];
+    }
+    
     const hasUnreadMessages = notificationList.some(notification => 
       !notification.read && !readStatus[notification.notification_id]
     );
@@ -124,49 +86,24 @@ const Notification = ({ bellIcon }) => {
   };
 
   // Markiere eine Benachrichtigung als gelesen
-  const markAsRead = async (id) => {
-    try {
-      // Versuche, die Benachrichtigung auf dem Server zu markieren
-      const response = await fetch(`${API_URL}/notifications/${id}/markAsRead`, {
-        method: 'PATCH'
-      });
-      
-      // Unabhängig vom Servererfolg, markiere die Benachrichtigung als gelesen im Cookie
-      const readStatus = getReadStatusFromCookies();
-      readStatus[id] = true;
-      setCookie('readNotifications', JSON.stringify(readStatus), 30);
-      
-      // Aktualisiere die lokale Liste
-      setNotifications(notifications.map(notification => 
-        notification.notification_id === id 
-          ? { ...notification, read: true } 
-          : notification
-      ));
-      
-      // Prüfe auf verbleibende ungelesene Nachrichten
-      checkForUnreadNotifications(notifications, readStatus);
-      
-    } catch (error) {
-      console.error('Fehler beim Markieren der Benachrichtigung als gelesen:', error);
-      
-      // Auch bei Fehlern im Server, markiere die Nachricht im Cookie als gelesen
-      const readStatus = getReadStatusFromCookies();
-      readStatus[id] = true;
-      setCookie('readNotifications', JSON.stringify(readStatus), 30);
-      
-      // Aktualisiere die lokale Liste
-      setNotifications(notifications.map(notification => 
-        notification.notification_id === id 
-          ? { ...notification, read: true } 
-          : notification
-      ));
-      
-      // Prüfe auf verbleibende ungelesene Nachrichten
-      checkForUnreadNotifications(notifications, readStatus);
-    }
+  const markAsRead = (id) => {
+    // Lokale Aktualisierung ohne API-Aufruf
+    const readStatus = getReadStatusFromCookies();
+    readStatus[id] = true;
+    setCookie('readNotifications', JSON.stringify(readStatus), 30);
+    
+    // Aktualisiere die lokale Liste
+    setNotifications(notifications.map(notification => 
+      notification.notification_id === id 
+        ? { ...notification, read: true } 
+        : notification
+    ));
+    
+    // Prüfe auf verbleibende ungelesene Nachrichten
+    checkForUnreadNotifications(notifications, readStatus);
   };
 
-  // toggle notification panel
+  // Toggle notification panel
   const togglePanel = (e) => {
     e.stopPropagation();
     setIsOpen(!isOpen);

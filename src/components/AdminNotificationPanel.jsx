@@ -1,6 +1,6 @@
 // src/components/AdminNotificationPanel.jsx
 import React, { useState, useEffect } from 'react';
-import './adminNotificationPanel.css';
+import './AdminNotificationPanel.css';
 
 const AdminNotificationPanel = () => {
   const [notificationTitle, setNotificationTitle] = useState('');
