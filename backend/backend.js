@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import lehrerRoutes from './routes/lehrer.routes.js';
 import schuelerRoutes from './routes/schueler.routes.js';
+import notificationRoutes from './routes/notification.routes.js';
 
 // __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -23,6 +24,7 @@ app.use(express.json());
 // Routen
 app.use('/api/teachers', lehrerRoutes);
 app.use('/api/schueler', schuelerRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Einfacher Test-Endpunkt
 app.get('/', (req, res) => {

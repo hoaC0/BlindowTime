@@ -1,4 +1,4 @@
-// src/notification.jsx - verbesserte Version
+// src/notification.jsx - mit nicht anklickbaren Benachrichtigungen
 
 import React, { useState, useEffect, useRef } from 'react';
 import './notification.css';
@@ -6,19 +6,47 @@ import './notification.css';
 const Notification = ({ bellIcon }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [hasUnread, setHasUnread] = useState(false);
   const panelRef = useRef(null);
   const triggerRef = useRef(null);
-  // API_URL definieren
   const API_URL = 'http://localhost:3001/api';
 
   // Lade Benachrichtigungen beim Laden der Komponente
   useEffect(() => {
-    // Setze direkt Demo-Benachrichtigungen ohne API-Aufruf
-    setDemoNotifications();
+    fetchNotifications();
   }, []);
 
-  // Lade Demo-Benachrichtigungen, da der Server-Aufruf fehlschlägt
+  // Benachrichtigungen vom Backend abrufen
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/notifications`);
+      
+      // Bei erfolgreicher Antwort die Benachrichtigungen setzen
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Geladene Benachrichtigungen:", data); // Debug-Ausgabe
+        setNotifications(data);
+        
+        // Prüfe auf ungelesene Nachrichten
+        const readStatus = getReadStatusFromCookies();
+        checkForUnreadNotifications(data, readStatus);
+      } else {
+        // Bei Fehlern Fallback zu Demo-Daten
+        console.error('Fehler beim Laden der Benachrichtigungen:', response.status);
+        setDemoNotifications();
+      }
+    } catch (error) {
+      console.error('Fehler beim Laden der Benachrichtigungen:', error);
+      setDemoNotifications();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Lade Demo-Benachrichtigungen, falls der Server-Aufruf fehlschlägt
   const setDemoNotifications = () => {
     const demoNotifications = [
       {
@@ -50,6 +78,7 @@ const Notification = ({ bellIcon }) => {
       }
     ];
     
+    console.log("Demo-Benachrichtigungen gesetzt:", demoNotifications); // Debug-Ausgabe
     setNotifications(demoNotifications);
     
     // Prüfe auf ungelesene Nachrichten
@@ -64,14 +93,14 @@ const Notification = ({ bellIcon }) => {
       try {
         return JSON.parse(cookieValue);
       } catch (error) {
-        console.error('Error parsing read notifications from cookie:', error);
+        console.error('Fehler beim Parsen der Lese-Status aus Cookie:', error);
         return {};
       }
     }
     return {};
   };
 
-  // Prüfe auf ungelesene Nachrichten - GEFIXT
+  // Prüfe auf ungelesene Nachrichten
   const checkForUnreadNotifications = (notificationList = [], readStatus = {}) => {
     // Sicherstellen, dass notificationList ein Array ist
     if (!Array.isArray(notificationList)) {
@@ -85,23 +114,32 @@ const Notification = ({ bellIcon }) => {
     setHasUnread(hasUnreadMessages);
   };
 
-  // Markiere eine Benachrichtigung als gelesen
-  const markAsRead = (id) => {
-    // Lokale Aktualisierung ohne API-Aufruf
-    const readStatus = getReadStatusFromCookies();
-    readStatus[id] = true;
-    setCookie('readNotifications', JSON.stringify(readStatus), 30);
-    
-    // Aktualisiere die lokale Liste
-    setNotifications(notifications.map(notification => 
-      notification.notification_id === id 
-        ? { ...notification, read: true } 
-        : notification
-    ));
-    
-    // Prüfe auf verbleibende ungelesene Nachrichten
-    checkForUnreadNotifications(notifications, readStatus);
-  };
+  // Markiere alle Benachrichtigungen als gelesen, wenn das Panel geöffnet wird
+  useEffect(() => {
+    if (isOpen && hasUnread) {
+      // Markiere alle Benachrichtigungen als gelesen, wenn das Panel geöffnet wird
+      const readStatus = getReadStatusFromCookies();
+      
+      let updated = false;
+      notifications.forEach(notification => {
+        if (!notification.read && !readStatus[notification.notification_id]) {
+          readStatus[notification.notification_id] = true;
+          updated = true;
+        }
+      });
+      
+      if (updated) {
+        setCookie('readNotifications', JSON.stringify(readStatus), 30);
+        setHasUnread(false);
+        
+        // Aktualisiere den read-Status in der Benachrichtigungsliste
+        setNotifications(notifications.map(notification => ({
+          ...notification,
+          read: true
+        })));
+      }
+    }
+  }, [isOpen, hasUnread, notifications]);
 
   // Toggle notification panel
   const togglePanel = (e) => {
@@ -143,18 +181,6 @@ const Notification = ({ bellIcon }) => {
     };
   }, [isOpen]);
 
-  // Markiere alle Benachrichtigungen als gelesen, wenn das Panel geöffnet wird
-  useEffect(() => {
-    if (isOpen && hasUnread) {
-      // Markiere alle ungelesenen Benachrichtigungen als gelesen
-      notifications.forEach(notification => {
-        if (!notification.read) {
-          markAsRead(notification.notification_id);
-        }
-      });
-    }
-  }, [isOpen, hasUnread]);
-
   // Cookie-Hilfsfunktionen
   const setCookie = (name, value, days) => {
     const expires = new Date();
@@ -181,7 +207,7 @@ const Notification = ({ bellIcon }) => {
 
   return (
     <>
-      {/* Bell icon */}
+      {/* Bell icon mit rotem Punkt für ungelesene Nachrichten */}
       <div 
         className="notification-trigger" 
         onClick={togglePanel}
@@ -201,18 +227,24 @@ const Notification = ({ bellIcon }) => {
         </div>
         
         <div className="notification-content">
-          {notifications.length > 0 ? (
+          {loading ? (
+            <div className="notification-loading">Benachrichtigungen werden geladen...</div>
+          ) : error ? (
+            <div className="notification-error">Fehler beim Laden der Benachrichtigungen</div>
+          ) : notifications && notifications.length > 0 ? (
             notifications.map((notification) => (
               <div 
                 key={notification.notification_id} 
-                className={`notification-item ${notification.read || isNotificationRead(notification.notification_id) ? 'read' : ''}`} 
-                onClick={() => markAsRead(notification.notification_id)}
+                className={`notification-item ${notification.read || isNotificationRead(notification.notification_id) ? 'read' : ''}`}
+                // Wir entfernen den onClick-Handler, um die Benachrichtigungen nicht klickbar zu machen
               >
                 <div className="notification-avatar">
-                  <span className="notification-avatar-letter">{notification.avatar}</span>
+                  <span className="notification-avatar-letter">
+                    {notification.avatar || (notification.sender ? notification.sender.charAt(0) : (notification.title ? notification.title.charAt(0) : 'N'))}
+                  </span>
                 </div>
                 <div className="notification-content-wrapper">
-                  <div className="notification-title">{notification.title}</div>
+                  <div className="notification-title">{notification.title || notification.sender || 'Benachrichtigung'}</div>
                   <div className="notification-message">{notification.message}</div>
                   <div className="notification-time">{notification.formattedTime}</div>
                 </div>
@@ -224,6 +256,8 @@ const Notification = ({ bellIcon }) => {
             </div>
           )}
         </div>
+        
+        
       </div>
     </>
   );

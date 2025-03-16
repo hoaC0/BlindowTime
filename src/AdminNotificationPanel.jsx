@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import './AdminNotificationPanel.css';
 
 const AdminNotificationPanel = () => {
-  const [notificationTitle, setNotificationTitle] = useState('');
   const [notificationMessage, setNotificationMessage] = useState('');
   const [sender, setSender] = useState('Sekretariat');
   const [isLoading, setIsLoading] = useState(false);
@@ -12,7 +11,7 @@ const AdminNotificationPanel = () => {
   const [notifications, setNotifications] = useState([]);
   const API_URL = 'http://localhost:3001/api';
 
-  // Lade Benachrichtigungen vom Server beim Laden der Komponente
+  // Lade Benachrichtigungen beim Laden der Komponente
   useEffect(() => {
     fetchNotifications();
   }, []);
@@ -25,8 +24,9 @@ const AdminNotificationPanel = () => {
       if (response.ok) {
         const data = await response.json();
         setNotifications(data);
+        setError(null);
       } else {
-        console.error('Fehler beim Laden der Benachrichtigungen');
+        console.error('Fehler beim Laden der Benachrichtigungen', response.status);
         setError('Fehler beim Laden der Benachrichtigungen vom Server.');
         
         // Verwende Dummy-Daten für die Entwicklung
@@ -85,8 +85,8 @@ const AdminNotificationPanel = () => {
   const handleSendNotification = async (e) => {
     e.preventDefault();
     
-    if (notificationTitle.trim() === '' || notificationMessage.trim() === '') {
-      setError('Bitte Titel und Nachricht eingeben.');
+    if (notificationMessage.trim() === '') {
+      setError('Bitte gib eine Nachricht ein.');
       return;
     }
     
@@ -111,21 +111,20 @@ const AdminNotificationPanel = () => {
       
       if (response.ok) {
         const result = await response.json();
-        setSuccess(`Nachricht "${sender}: ${notificationMessage}" wurde gesendet!`);
-        setNotificationTitle('');
+        setSuccess(`Nachricht wurde erfolgreich gesendet!`);
         setNotificationMessage('');
         
-        // Aktualisiere die Benachrichtigungsliste
+        // Benachrichtigungsliste aktualisieren
         fetchNotifications();
       } else {
-        setError('Fehler beim Senden der Benachrichtigung.');
+        console.error('Fehler beim Senden der Benachrichtigung:', response.status);
+        setError('Fehler beim Senden der Benachrichtigung. Bitte versuche es später erneut.');
         
         // Simuliere Erfolg für die Entwicklung
         setSuccess(`Nachricht "${sender}: ${notificationMessage}" wurde gesendet! (simuliert)`);
-        setNotificationTitle('');
         setNotificationMessage('');
         
-        // Aktualisiere die lokale Liste mit der neuen Benachrichtigung
+        // Lokale Liste mit neuer Benachrichtigung aktualisieren
         const mockNotification = {
           notification_id: Date.now().toString(),
           title: sender,
@@ -145,10 +144,9 @@ const AdminNotificationPanel = () => {
       
       // Simuliere Erfolg für die Entwicklung
       setSuccess(`Nachricht "${sender}: ${notificationMessage}" wurde gesendet! (simuliert)`);
-      setNotificationTitle('');
       setNotificationMessage('');
       
-      // Aktualisiere die lokale Liste mit der neuen Benachrichtigung
+      // Lokale Liste mit neuer Benachrichtigung aktualisieren
       const mockNotification = {
         notification_id: Date.now().toString(),
         title: sender,
@@ -181,7 +179,8 @@ const AdminNotificationPanel = () => {
           setNotifications(notifications.filter(notification => notification.notification_id !== id));
           setSuccess('Benachrichtigung wurde erfolgreich gelöscht.');
         } else {
-          setError('Fehler beim Löschen der Benachrichtigung.');
+          console.error('Fehler beim Löschen der Benachrichtigung:', response.status);
+          setError('Fehler beim Löschen der Benachrichtigung. Bitte versuche es später erneut.');
           
           // Simuliere Erfolg für die Entwicklung
           setNotifications(notifications.filter(notification => notification.notification_id !== id));
@@ -259,7 +258,7 @@ const AdminNotificationPanel = () => {
                 <div className="notification-header">
                   <div className="notification-sender">
                     <div className="notification-avatar">
-                      <span className="notification-avatar-letter">{notification.avatar || notification.sender.charAt(0)}</span>
+                      <span className="notification-avatar-letter">{notification.avatar || notification.sender?.charAt(0) || 'N'}</span>
                     </div>
                     <h3>{notification.sender || notification.title}</h3>
                   </div>
