@@ -1,3 +1,4 @@
+// backend/backend.js - Aktualisiert mit Stundenplan-Routen
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -6,6 +7,7 @@ import { dirname, join } from 'path';
 import lehrerRoutes from './routes/lehrer.routes.js';
 import schuelerRoutes from './routes/schueler.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
+import stundenplanRoutes from './routes/stundenplan.routes.js';
 
 // __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -25,6 +27,7 @@ app.use(express.json());
 app.use('/api/teachers', lehrerRoutes);
 app.use('/api/schueler', schuelerRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/stundenplan', stundenplanRoutes);
 
 // Einfacher Test-Endpunkt
 app.get('/', (req, res) => {
