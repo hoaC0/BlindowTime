@@ -1,252 +1,131 @@
-.admin-container {
-  max-width: 1200px;
-  margin: 20px auto;
+/* Ergänze deine bestehende adminDashboard.css mit diesen Styles */
+
+/* Styles für den Benachrichtigungsbereich */
+.notification-form-container {
   background-color: white;
   border-radius: 8px;
+  padding: 24px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
-
-.admin-tabs {
-  display: flex;
   margin-bottom: 20px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.tab-button {
-  background: none;
-  border: none;
-  padding: 12px 24px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  color: #666;
-  position: relative;
-}
-
-.tab-button.active {
-  color: #0f3c63;
-  font-weight: bold;
-}
-
-.tab-button.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background-color: #0f3c63;
-}
-
-.class-list h2, .notification-panel h2, .student-management h2 {
-  color: #0f3c63;
-  margin-bottom: 20px;
-}
-
-.class-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.class-card {
-  background-color: #f9fafb;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 16px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-}
-
-.class-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  background-color: #f0f7ff;
-}
-
-.class-card h3 {
-  color: #0f3c63;
-  margin: 0 0 8px 0;
-}
-
-.class-card p {
-  color: #666;
-  margin: 0;
 }
 
 .notification-form {
-  max-width: 600px;
+  max-width: 100%;
 }
 
-.form-group {
+.success-message {
+  padding: 12px;
+  border-radius: 4px;
+  background-color: #e8f5e9;
+  color: #2e7d32;
   margin-bottom: 16px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
   font-weight: 500;
-  color: #0f3c63;
-}
-
-.form-group input, .form-group textarea, .form-group select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.form-group textarea {
-  resize: vertical;
-}
-
-.send-button, .add-button, .save-button {
-  background-color: #0f3c63;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.send-button:hover, .add-button:hover, .save-button:hover {
-  background-color: #0a2842;
-}
-
-/* Neue Styles für Schülerverwaltung */
-.student-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  border-left: 4px solid #2e7d32;
 }
 
-.student-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+.success-message::before {
+  content: "✓";
+  margin-right: 8px;
+  font-weight: bold;
 }
 
-.student-table th, .student-table td {
-  border: 1px solid #e0e0e0;
-  padding: 12px;
-  text-align: left;
-}
-
-.student-table th {
-  background-color: #f0f7ff;
-  color: #0f3c63;
-  font-weight: 600;
-}
-
-.student-table tr:nth-child(even) {
-  background-color: #f9fafb;
-}
-
-.student-table tr:hover {
-  background-color: #e7f5ff;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.edit-button, .delete-button, .cancel-button {
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.edit-button {
-  background-color: #0f3c63;
-  color: white;
-  border: none;
-}
-
-.edit-button:hover {
-  background-color: #0a2842;
-}
-
-.delete-button {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-}
-
-.delete-button:hover {
-  background-color: #c82333;
-}
-
-.cancel-button {
-  background-color: #f8f9fa;
-  color: #212529;
-  border: 1px solid #ddd;
-}
-
-.cancel-button:hover {
-  background-color: #e2e6ea;
-}
-
-.loading, .error-message {
-  text-align: center;
-  padding: 20px;
-  font-size: 16px;
-}
-
-.error-message {
-  color: #dc3545;
-}
-
-.form-row {
-  display: flex;
-  gap: 16px;
-}
-
-.form-row .form-group {
-  flex: 1;
-}
-
-/* Modal für Schülerformular */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 24px;
+.notification-list-container {
+  background-color: white;
   border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 500px;
   overflow-y: auto;
 }
 
-.modal-content h3 {
-  color: #0f3c63;
-  margin-top: 0;
-  margin-bottom: 20px;
+.admin-notification-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  background-color: #f9fafb;
+  transition: all 0.2s;
 }
 
-.modal-buttons {
+.admin-notification-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.notification-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.notification-sender {
+  display: flex;
+  align-items: center;
   gap: 12px;
-  margin-top: 24px;
+}
+
+.notification-sender h3 {
+  margin: 0;
+  color: #0f3c63;
+  font-size: 1.1rem;
+}
+
+.notification-time {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.delete-notification-button {
+  background-color: white;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.delete-notification-button:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.empty-notifications {
+  text-align: center;
+  padding: 30px;
+  color: #6c757d;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.notification-panel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Responsive Design für Notification Panel */
+@media (max-width: 768px) {
+  .notification-form {
+    flex-direction: column;
+  }
+  
+  .notification-form .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .admin-notification-item {
+    padding: 12px;
+  }
 }
