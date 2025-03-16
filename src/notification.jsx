@@ -46,6 +46,23 @@ const Notification = ({ bellIcon }) => {
     }
   };
 
+
+
+useEffect(() => {
+  // Initiale Abfrage der Benachrichtigungen
+  fetchNotifications();
+  
+  // Echtzeit-Updates alle 10 Sekunden
+  const updateInterval = setInterval(() => {
+    fetchNotifications();
+  }, 10000); // 10000 ms = 10 Sekunden
+  
+  // Aufräumen, wenn die Komponente unmontiert wird
+  return () => {
+    clearInterval(updateInterval);
+  };
+}, []);
+
   // Lade Demo-Benachrichtigungen, falls der Server-Aufruf fehlschlägt
   const setDemoNotifications = () => {
     const demoNotifications = [

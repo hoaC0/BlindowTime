@@ -216,7 +216,7 @@ const AdminNotificationPanel = () => {
               disabled={isLoading}
             >
               <option value="Sekretariat">Sekretariat</option>
-              <option value="Klassenlehrer">Klassenlehrer</option>
+              <option value="IT">Ausbildungsleitung ITA</option>
               <option value="Schuldirektor">Schuldirektor</option>
               <option value="IT-Abteilung">IT-Abteilung</option>
               <option value="Schulverwaltung">Schulverwaltung</option>

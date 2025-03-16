@@ -1,4 +1,4 @@
-/* src/notification.css - vollständige Styles mit Avatar-Fix */
+/* src/notification.css - mit Zeilenumbruch-Funktion */
 .notification-panel {
   position: absolute;
   top: 60px;
@@ -90,38 +90,22 @@
   text-transform: uppercase;
 }
 
-/* Spezifische Stile für bekannte Absender mit ::before */
-[data-sender="IT-Abteilung"] .notification-avatar-letter::before {
-  content: "IT";
-}
-
-[data-sender="Sekretariat"] .notification-avatar-letter::before {
-  content: "SE";
-}
-
-[data-sender="Klassenlehrer"] .notification-avatar-letter::before {
-  content: "KL";
-}
-
-[data-sender="Schuldirektor"] .notification-avatar-letter::before {
-  content: "SD";
-}
-
-[data-sender="Schulverwaltung"] .notification-avatar-letter::before {
-  content: "SV";
-}
-
 .notification-content-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* Stellt sicher, dass der Inhalt nicht die Grenzen überschreitet */
+  min-width: 0;
 }
 
 .notification-title {
   font-weight: 600;
   color: #0f3c63;
   margin-bottom: 4px;
+  /* Fügt Zeilenumbruch hinzu */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .notification-message {
@@ -129,6 +113,11 @@
   color: #333;
   margin-bottom: 4px;
   line-height: 1.4;
+  /* Stellt sicher, dass Text bei Bedarf umgebrochen wird */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* Verhindert horizontales Scrollen in der Benachrichtigung */
+  white-space: normal;
 }
 
 .notification-time {
