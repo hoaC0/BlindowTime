@@ -1,5 +1,7 @@
+// src/adminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import './adminDashboard.css';
+import AdminNotificationPanel from './components/AdminNotificationPanel'; // Importiere die neue Komponente
 
 const AdminDashboard = () => {
     // Sample class data - in a real app this would come from a database
@@ -37,9 +39,7 @@ const AdminDashboard = () => {
         email: ''
     });
 
-    // State for notification form
-    const [notificationTitle, setNotificationTitle] = useState('');
-    const [notificationMessage, setNotificationMessage] = useState('');
+    // State for tabs
     const [selectedTab, setSelectedTab] = useState('classes');
 
     // Klassen vom Backend laden
@@ -253,19 +253,6 @@ const AdminDashboard = () => {
         return klasse ? klasse.name : `Klasse ${klassenId}`;
     };
 
-    const handleSendNotification = (e) => {
-        e.preventDefault();
-        if (notificationTitle.trim() === '' || notificationMessage.trim() === '') {
-            alert('Bitte Titel und Nachricht eingeben.');
-            return;
-        }
-        
-        // Here you would save the notification to your database/state
-        alert(`Nachricht "${notificationTitle}" wurde gesendet!`);
-        setNotificationTitle('');
-        setNotificationMessage('');
-    };
-
     return (
         <div className="admin-container">
             <div className="admin-tabs">
@@ -294,7 +281,7 @@ const AdminDashboard = () => {
                     <h2>Klassen</h2>
                     <div className="class-grid">
                         {classes.map((cls) => (
-                            <div key={cls.id} className="class-card" onClick={() => window.location.href = `/admin/class.html?id=${cls.id}`}>
+                            <div key={cls.id} className="class-card" onClick={() => window.location.href = `/adminClass.html?id=${cls.id}`}>
                                 <h3>{cls.name}</h3>
                                 <p>Klassenlehrer: {cls.teacher}</p>
                             </div>
@@ -401,9 +388,9 @@ const AdminDashboard = () => {
                                     <div className="form-group">
                                         <label htmlFor="klassen_id">Klasse</label>
                                         <select
-                                            id="klasse_id"
-                                            name="klasse_id"
-                                            value={studentFormData.klasse_id}
+                                            id="klassen_id"
+                                            name="klassen_id"
+                                            value={studentFormData.klassen_id}
                                             onChange={handleStudentFormChange}
                                             required
                                         >
@@ -470,34 +457,7 @@ const AdminDashboard = () => {
             )}
 
             {selectedTab === 'notifications' && (
-                <div className="notification-panel">
-                    <h2>Benachrichtigung senden</h2>
-                    <form onSubmit={handleSendNotification} className="notification-form">
-                        <div className="form-group">
-                            <label htmlFor="notification-title">Titel</label>
-                            <input 
-                                type="text" 
-                                id="notification-title"
-                                value={notificationTitle}
-                                onChange={(e) => setNotificationTitle(e.target.value)}
-                                placeholder="Titel der Benachrichtigung"
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="notification-message">Nachricht</label>
-                            <textarea 
-                                id="notification-message"
-                                value={notificationMessage}
-                                onChange={(e) => setNotificationMessage(e.target.value)}
-                                placeholder="Nachrichtentext hier eingeben..."
-                                rows="5"
-                                required
-                            ></textarea>
-                        </div>
-                        <button type="submit" className="send-button">Nachricht senden</button>
-                    </form>
-                </div>
+                <AdminNotificationPanel />
             )}
         </div>
     );

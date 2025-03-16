@@ -1,3 +1,4 @@
+/* src/notification.css - aktualisierte Styles */
 .notification-panel {
   position: absolute;
   top: 60px;
@@ -48,11 +49,30 @@
   display: flex;
   padding: 16px;
   border-bottom: 1px solid #e0e0e0;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Ungelesene Nachricht Indikator */
+.notification-item:not(.read)::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #dc3545;
+  border-radius: 50%;
 }
 
 .notification-item:hover {
   background-color: #f0f7ff;
+}
+
+.notification-item.read {
+  opacity: 0.7;
 }
 
 .notification-avatar {
@@ -98,16 +118,6 @@
   color: #6c757d;
 }
 
-.notification-thumbnail {
-  width: 80px;
-  height: 45px;
-  background-color: #e9ecef;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-left: 12px;
-  flex-shrink: 0;
-}
-
 .empty-notifications {
   text-align: center;
   padding: 30px 20px;
@@ -144,6 +154,39 @@
   background-color: #dc3545;
   border-radius: 50%;
   border: 1px solid white;
+}
+
+/* Notification animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.notification-dot {
+  animation: pulse 2s infinite;
+}
+
+/* Delete button for notifications */
+.notification-delete {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.notification-delete:hover {
+  color: #dc3545;
+}
+
+.notification-item:hover .notification-delete {
+  display: block;
 }
 
 /* Responsive design */
