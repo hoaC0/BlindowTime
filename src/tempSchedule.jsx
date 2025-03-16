@@ -1,92 +1,187 @@
-"use client";
+// src/StundenplanAnzeige.jsx
 import React, { useState, useEffect } from 'react';
 import "./tempSchedule.css";
 
-const TempSchedule = () => {
-  const [currentClass, setCurrentClass] = useState('');
-  const [days] = useState(["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]);
-  const [times] = useState([
-    { id: 1, time: "08:00 - 08:45" },
-    { id: 2, time: "08:45 - 09:30" },
-    { id: 3, time: "09:45 - 10:30" },
-    { id: 4, time: "10:30 - 11:15" },
-    { id: 5, time: "11:30 - 12:15" },
-    { id: 6, time: "12:15 - 13:00" },
-    { id: 7, time: "14:00 - 14:45" },
-    { id: 8, time: "14:45 - 15:30" },
-    { id: 9, time: "15:45 - 16:30" },
-    { id: 10, time: "16:30 - 17:15" },
-    { id: 11, time: "17:30 - 18:15" },
-    { id: 12, time: "18:15 - 19:00" },
-    { id: 13, time: "19:15 - 20:00" }
+const tempSchedule = () => {
+  const [aktuelleKlasse, setAktuelleKlasse] = useState('');
+  const [tage] = useState(["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]);
+  const [zeiten] = useState([
+    { id: 1, zeit: "08:00 - 08:45" },
+    { id: 2, zeit: "08:45 - 09:30" },
+    { id: 3, zeit: "09:45 - 10:30" },
+    { id: 4, zeit: "10:30 - 11:15" },
+    { id: 5, zeit: "11:30 - 12:15" },
+    { id: 6, zeit: "12:15 - 13:00" },
+    { id: 7, zeit: "14:00 - 14:45" },
+    { id: 8, zeit: "14:45 - 15:30" },
+    { id: 9, zeit: "15:45 - 16:30" },
+    { id: 10, zeit: "16:30 - 17:15" },
+    { id: 11, zeit: "17:30 - 18:15" },
+    { id: 12, zeit: "18:15 - 19:00" },
+    { id: 13, zeit: "19:15 - 20:00" }
   ]);
 
-  // Stundenplan-Daten (würde in einer echten App von einer API kommen)
-  const [scheduleData, setScheduleData] = useState([]);
+  // Stundenplan-Daten
+  const [stundenplanDaten, setStundenplanDaten] = useState([]);
+  const [laden, setLaden] = useState(false);
+  const [fehler, setFehler] = useState(null);
   
   // Aktueller Tag für Highlight-Funktion
-  const currentDay = new Date().getDay(); // 0 = Sonntag, 1 = Montag, ...
-  const currentDayIndex = currentDay === 0 || currentDay === 6 ? -1 : currentDay - 1;
+  const aktuellerTag = new Date().getDay(); // 0 = Sonntag, 1 = Montag, ...
+  const aktuellerTagIndex = aktuellerTag === 0 || aktuellerTag === 6 ? -1 : aktuellerTag - 1;
   
   // Klassenoptionen für Dropdown
-  const classOptions = [
-    { id: '', name: '' },
-    { id: 'ITA25', name: 'ITA25' },
-    { id: 'BTA26', name: 'BTA26' },
-    { id: 'GD25', name: 'GD25' },
-    { id: 'PTA26', name: 'PTA26' }
-  ];
+  const [klassenOptionen, setKlassenOptionen] = useState([
+    { id: '', name: 'Bitte wählen...' }
+  ]);
 
-  // Laden der Beispiel-Daten
+  // API URL
+  const API_URL = 'http://localhost:3001/api';
+
+  // Beim Laden der Komponente: Cookie lesen
   useEffect(() => {
-    // Hier würden in einer echten App die Daten von einer API geladen
-    const mockScheduleData = [];
+    // Cookie für gespeicherte Klasse lesen
+    const gespeicherteKlasse = getCookie('selectedClass');
+    if (gespeicherteKlasse) {
+      setAktuelleKlasse(gespeicherteKlasse);
+    }
+  }, []);
+
+  // Laden der Klassen für das Dropdown
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await fetch(`${API_URL}/stundenplan/klassen/alle`);
+        
+        if (response.ok) {
+          const klassen = await response.json();
+          const formattierteKlassen = [
+            { id: '', name: 'Bitte wählen...' },
+            ...klassen.map(cls => ({ 
+              id: cls.name, 
+              name: cls.name 
+            }))
+          ];
+          setKlassenOptionen(formattierteKlassen);
+        } else {
+          console.error('Fehler beim Laden der Klassen:', response.status);
+          // Fallback zu statischen Daten
+          setKlassenOptionen([
+            { id: '', name: 'Bitte wählen...' },
+            { id: 'ITA25', name: 'ITA25' },
+            { id: 'BTA25', name: 'BTA25' },
+            { id: 'GD25', name: 'GD25' },
+            { id: 'PTA25', name: 'PTA25' }
+          ]);
+        }
+      } catch (error) {
+        console.error('Fehler beim Laden der Klassen:', error);
+        // Fallback zu statischen Daten
+        setKlassenOptionen([
+          { id: '', name: 'Bitte wählen...' },
+          { id: 'ITA25', name: 'ITA25' },
+          { id: 'BTA25', name: 'BTA25' },
+          { id: 'GD25', name: 'GD25' },
+          { id: 'PTA25', name: 'PTA25' }
+        ]);
+      }
+    };
     
-    // Beispiel-Daten für ITA25
-    if (currentClass === 'ITA25') {
-      mockScheduleData.push(
-        { timeId: 1, dayIndex: 0, subject: 'Mathematik', teacher: 'Fr. Müller', room: '101', color: '#4285F4' },
-        { timeId: 2, dayIndex: 0, subject: 'Mathematik', teacher: 'Fr. Müller', room: '101', color: '#4285F4' },
-        { timeId: 3, dayIndex: 1, subject: 'Deutsch', teacher: 'Hr. Schmidt', room: '203', color: '#EA4335' },
-        { timeId: 4, dayIndex: 1, subject: 'Deutsch', teacher: 'Hr. Schmidt', room: '203', color: '#EA4335' },
-        { timeId: 5, dayIndex: 2, subject: 'Englisch', teacher: 'Fr. Weber', room: '105', color: '#FBBC05' },
-        { timeId: 6, dayIndex: 2, subject: 'Englisch', teacher: 'Fr. Weber', room: '105', color: '#FBBC05' },
-        { timeId: 3, dayIndex: 0, subject: 'Informatik', teacher: 'Hr. Schneider', room: 'PC-Lab 1', color: '#34A853' },
-        { timeId: 4, dayIndex: 0, subject: 'Informatik', teacher: 'Hr. Schneider', room: 'PC-Lab 1', color: '#34A853' },
-        { timeId: 7, dayIndex: 3, subject: 'Physik', teacher: 'Hr. Fischer', room: '204', color: '#7B1FA2' },
-        { timeId: 8, dayIndex: 3, subject: 'Physik', teacher: 'Hr. Fischer', room: '204', color: '#7B1FA2' },
-        { timeId: 5, dayIndex: 4, subject: 'Projektarbeit', teacher: 'Fr. Müller', room: 'PC-Lab 2', color: '#0097A7' },
-        { timeId: 6, dayIndex: 4, subject: 'Projektarbeit', teacher: 'Fr. Müller', room: 'PC-Lab 2', color: '#0097A7' }
-      );
-    } else if (currentClass === 'BTA26') {
-      mockScheduleData.push(
-        { timeId: 1, dayIndex: 1, subject: 'Biologie', teacher: 'Fr. Fischer', room: '201', color: '#34A853' },
-        { timeId: 2, dayIndex: 1, subject: 'Biologie', teacher: 'Fr. Fischer', room: '201', color: '#34A853' },
-        { timeId: 5, dayIndex: 0, subject: 'Chemie', teacher: 'Hr. Weber', room: 'Labor 1', color: '#EA4335' },
-        { timeId: 6, dayIndex: 0, subject: 'Chemie', teacher: 'Hr. Weber', room: 'Labor 1', color: '#EA4335' }
-      );
-    } else if (currentClass === 'GD25') {
-      mockScheduleData.push(
-        { timeId: 3, dayIndex: 2, subject: 'Gestaltung', teacher: 'Fr. Wagner', room: 'Atelier', color: '#FBBC05' },
-        { timeId: 4, dayIndex: 2, subject: 'Gestaltung', teacher: 'Fr. Wagner', room: 'Atelier', color: '#FBBC05' }
-      );
-    } else if (currentClass === 'PTA26') {
-      mockScheduleData.push(
-        { timeId: 7, dayIndex: 4, subject: 'Pharmazie', teacher: 'Hr. Schuster', room: 'Labor 2', color: '#7B1FA2' },
-        { timeId: 8, dayIndex: 4, subject: 'Pharmazie', teacher: 'Hr. Schuster', room: 'Labor 2', color: '#7B1FA2' }
-      );
+    fetchClasses();
+  }, [API_URL]);
+
+  // Laden des Stundenplans basierend auf der ausgewählten Klasse
+  useEffect(() => {
+    if (!aktuelleKlasse) {
+      setStundenplanDaten([]);
+      return;
     }
     
-    setScheduleData(mockScheduleData);
-  }, [currentClass]);
+    const fetchSchedule = async () => {
+      setLaden(true);
+      setFehler(null);
+      
+      try {
+        const response = await fetch(`${API_URL}/stundenplan/${aktuelleKlasse}`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          setStundenplanDaten(data);
+        } else {
+          console.error('Fehler beim Laden des Stundenplans:', response.status);
+          setFehler('Der Stundenplan konnte nicht geladen werden.');
+          setStundenplanDaten([]);
+        }
+      } catch (error) {
+        console.error('Fehler beim Laden des Stundenplans:', error);
+        setFehler('Der Stundenplan konnte nicht geladen werden.');
+        setStundenplanDaten([]);
+      } finally {
+        setLaden(false);
+      }
+    };
+    
+    fetchSchedule();
+  }, [aktuelleKlasse, API_URL]);
 
-  const handleClassChange = (e) => {
-    setCurrentClass(e.target.value);
+  // Cookie-Funktionen
+  const setCookie = (name, value, days) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
   };
 
-  // Finde Unterrichtsstunde für eine bestimmte Zeit und einen Tag
-  const getClassForTimeAndDay = (timeId, dayIndex) => {
-    return scheduleData.find(item => item.timeId === timeId && item.dayIndex === dayIndex);
+  const getCookie = (name) => {
+    const nameEQ = `${name}=`;
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+  };
+
+  const handleKlassenWechsel = (e) => {
+    const neueKlasse = e.target.value;
+    setAktuelleKlasse(neueKlasse);
+    
+    // Speichere Klassenauswahl in Cookie (für 30 Tage)
+    if (neueKlasse) {
+      setCookie('selectedClass', neueKlasse, 30);
+    } else {
+      // Wenn keine Klasse ausgewählt ist, lösche das Cookie
+      document.cookie = "selectedClass=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+  };
+
+  // Diese Funktion gibt die Unterrichtsdaten für eine bestimmte Stunde und einen Tag zurück
+  const getUnterrichtFuerStundeUndTag = (stundenId, tagIndex) => {
+    if (!stundenplanDaten || stundenplanDaten.length === 0) return null;
+
+    // Suche nach dem passenden Stundeneintrag
+    const stunde = stundenplanDaten.find(eintrag => eintrag.stunde === stundenId);
+    if (!stunde) return null;
+
+    // Tagespräfixe für die Datenfelder
+    const tagPraefix = ['mo', 'di', 'mi', 'do', 'fr'][tagIndex];
+    const fachId = stunde[`fach_${tagPraefix}`];
+    
+    // Wenn kein Fach für diesen Tag/diese Stunde existiert
+    if (!fachId) return null;
+
+    // Erstelle ein Unterrichtsobjekt mit allen relevanten Daten
+    return {
+      fachId,
+      fachName: stunde[`fach_${tagPraefix}_name`],
+      fachFarbe: stunde[`fach_${tagPraefix}_farbe`],
+      raumId: stunde[`raum_${tagPraefix}`],
+      raumNummer: stunde[`raum_${tagPraefix}_nummer`],
+      raumName: stunde[`raum_${tagPraefix}_name`],
+      lehrerId: stunde[`lehrer_${tagPraefix}`],
+      lehrerVorname: stunde[`lehrer_${tagPraefix}_vorname`],
+      lehrerNachname: stunde[`lehrer_${tagPraefix}_nachname`]
+    };
   };
 
   return (
@@ -96,7 +191,7 @@ const TempSchedule = () => {
           <h2>Stundenplan</h2>
           <div className="current-date-display">
             <div className="today-marker">
-              Heute: {currentDayIndex >= 0 ? days[currentDayIndex] : 'Wochenende'}
+              Heute: {aktuellerTagIndex >= 0 ? tage[aktuellerTagIndex] : 'Wochenende'}
             </div>
           </div>
         </div>
@@ -104,11 +199,12 @@ const TempSchedule = () => {
           <label htmlFor="class-select">Klasse:</label>
           <select 
             id="class-select" 
-            value={currentClass} 
-            onChange={handleClassChange}
+            value={aktuelleKlasse} 
+            onChange={handleKlassenWechsel}
             className="class-select"
           >
-            {classOptions.map(option => (
+            {/* Nur ein einziger map-Aufruf */}
+            {klassenOptionen.map(option => (
               <option key={option.id} value={option.id}>
                 {option.name}
               </option>
@@ -117,53 +213,72 @@ const TempSchedule = () => {
         </div>
       </div>
       
-      <div className="schedule-grid">
-        {/* Überschriften-Zeile */}
-        <div className="schedule-cell header time-header">Zeit</div>
-        {days.map((day, index) => (
-          <div 
-            key={index} 
-            className={`schedule-cell header ${index === currentDayIndex ? 'current-day' : ''}`}
-          >
-            {day}
-          </div>
-        ))}
-        
-        {/* Stundenzeilen */}
-        {times.map((time) => (
-          <React.Fragment key={time.id}>
-            <div className="schedule-cell time-cell" title={time.time}>
-              <div className="hour-number">{time.id}</div>
-              <div className="hour-time">{time.time}</div>
+      {fehler && (
+        <div className="error-message" style={{ padding: '10px', backgroundColor: '#f8d7da', color: '#721c24', marginBottom: '20px', borderRadius: '5px' }}>
+          {fehler}
+          {fehler}
+        </div>
+      )}
+      
+      {laden ? (
+        <div className="loading-message" style={{ textAlign: 'center', padding: '20px' }}>
+          Stundenplan wird geladen...
+        </div>
+      ) : (
+        <div className="schedule-grid">
+          {/* Überschriften-Zeile */}
+          <div className="schedule-cell header time-header">Zeit</div>
+          {tage.map((tag, index) => (
+            <div 
+              key={index} 
+              className={`schedule-cell header ${index === aktuellerTagIndex ? 'current-day' : ''}`}
+            >
+              {tag}
             </div>
-            
-            {days.map((_, dayIndex) => {
-              const classData = getClassForTimeAndDay(time.id, dayIndex);
-              return (
-                <div 
-                  key={`${time.id}-${dayIndex}`} 
-                  className={`schedule-cell ${dayIndex === currentDayIndex ? 'current-day-column' : ''} ${classData ? 'has-class' : ''}`}
-                >
-                  {classData && (
-                    <div 
-                      className="class-card" 
-                      style={{borderLeftColor: classData.color}}
-                    >
-                      <div className="class-subject" style={{color: classData.color}}>
-                        {classData.subject}
+          ))}
+          
+          {/* Stundenzeilen */}
+          {zeiten.map((zeit) => (
+            <React.Fragment key={zeit.id}>
+              <div className="schedule-cell time-cell" title={zeit.zeit}>
+                <div className="hour-number">{zeit.id}</div>
+                <div className="hour-time">{zeit.zeit}</div>
+              </div>
+              
+              {tage.map((_, tagIndex) => {
+                const unterricht = getUnterrichtFuerStundeUndTag(zeit.id, tagIndex);
+                return (
+                  <div 
+                    key={`${zeit.id}-${tagIndex}`} 
+                    className={`schedule-cell ${tagIndex === aktuellerTagIndex ? 'current-day-column' : ''} ${unterricht ? 'has-class' : ''}`}
+                  >
+                    {unterricht && (
+                      <div 
+                        className="class-card" 
+                        style={{borderLeftColor: unterricht.fachFarbe || '#0f3c63'}}
+                      >
+                        <div className="class-subject" style={{color: unterricht.fachFarbe || '#0f3c63'}}>
+                          {unterricht.fachName}
+                        </div>
+                        <div className="class-details">
+                          <span className="class-teacher">
+                            {unterricht.lehrerVorname ? 
+                              `${unterricht.lehrerVorname.charAt(0)}. ${unterricht.lehrerNachname}` : 
+                              'Kein Lehrer'}
+                          </span>
+                          <span className="class-room">
+                            {unterricht.raumNummer || unterricht.raumName || 'Kein Raum'}
+                          </span>
+                        </div>
                       </div>
-                      <div className="class-details">
-                        <span className="class-teacher">{classData.teacher}</span>
-                        <span className="class-room">{classData.room}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </React.Fragment>
-        ))}
-      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
       
       <div className="schedule-legend">
         <div className="legend-title">Legende:</div>
@@ -176,4 +291,4 @@ const TempSchedule = () => {
   );
 };
 
-export default TempSchedule;
+export default tempSchedule;
