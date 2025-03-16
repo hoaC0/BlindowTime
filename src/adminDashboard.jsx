@@ -1,7 +1,7 @@
 // src/adminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import './adminDashboard.css';
-import AdminNotificationPanel from './components/AdminNotificationPanel.jsx';
+import AdminNotificationPanel from './AdminNotificationPanel.jsx';
 
 const AdminDashboard = () => {
     // Sample class data - in a real app this would come from a database

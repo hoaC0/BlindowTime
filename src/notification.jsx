@@ -224,12 +224,6 @@ const Notification = ({ bellIcon }) => {
             </div>
           )}
         </div>
-        
-        {notifications.length > 0 && (
-          <div className="more-notifications">
-            Alle Benachrichtigungen ansehen
-          </div>
-        )}
       </div>
     </>
   );
