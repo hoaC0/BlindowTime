@@ -1,6 +1,7 @@
 // src/dashboard.jsx
 import React, { useState, useEffect } from 'react';
 import './dashboard.css';
+import MensaElement from './mensaElement.jsx';
 
 const Dashboard = () => {
     // State für Tasks aus den Cookies
@@ -266,6 +267,7 @@ const Dashboard = () => {
     
     return (
         <div className="dashboard-container">
+            {/* Top three cards in the original grid */}
             <div className="dashboard-grid">
                 {/* ToDo-Karte */}
                 <div className="dashboard-card">
@@ -347,13 +349,13 @@ const Dashboard = () => {
                     </div>
                     <div className="card-content">
                         {fehlerStundenplan && (
-                            <div className="error-message" style={{ padding: '10px', backgroundColor: '#f8d7da', color: '#721c24', marginBottom: '20px', borderRadius: '5px' }}>
+                            <div className="error-message">
                                 {fehlerStundenplan}
                             </div>
                         )}
                         
                         {ladenStundenplan ? (
-                            <div className="loading-message" style={{ textAlign: 'center', padding: '20px' }}>
+                            <div className="loading-message">
                                 Stundenplan wird geladen...
                             </div>
                         ) : (
@@ -415,6 +417,9 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+            
+            {/* Mensa-Karte */}
+            <MensaElement />
         </div>
     );
 };

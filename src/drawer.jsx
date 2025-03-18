@@ -36,8 +36,10 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
         <ul>
           <li onClick={() => window.location.href = 'index.html'}>Home</li>
           <li onClick={() => window.location.href = 'stundenplan.html'}>Stundenplan</li>
-          <li onClick={() => window.location.href = 'todo.html'}>Aufgabenliste</li>
           <li onClick={() => window.location.href = 'kalender.html'}>Kalender</li>
+          <li onClick={() => window.location.href = 'todo.html'}>Aufgabenliste</li>
+          <li onClick={() => window.location.href = 'mensa.html'}>Mensa</li>
+          
         </ul>
       </div>
     </div>
