@@ -1,24 +1,18 @@
 // src/adminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import './adminDashboard.css';
+import ClassEditor from './classEditor.jsx';
 import AdminNotificationPanel from './AdminNotificationPanel.jsx';
 
 const AdminDashboard = () => {
-    // Sample class data - in a real app this would come from a database
-    const [classes, setClasses] = useState([
-        { id: 1, name: "BTA25", teacher: "Fr. Müller" },
-        { id: 2, name: "BTA26", teacher: "Hr. Schmidt" },
-        { id: 3, name: "GD25", teacher: "Hr. Fischer" },
-        { id: 4, name: "GD26", teacher: "Fr. Wagner" },
-        { id: 5, name: "GD27", teacher: "Hr. Weber" },
-        { id: 6, name: "ITA25", teacher: "Fr. Knaber" },
-        { id: 7, name: "ITA26", teacher: "Hr. Schneider" },
-        { id: 8, name: "PTA25", teacher: "Fr. Schuster" },
-        { id: 9, name: "PTA26", teacher: "Hr. Schuster" },
-    ]);
-
-    // State für API-URLs
+    // API-URL für Backend-Anfragen
     const API_URL = 'http://localhost:3001/api';
+
+    // State für Tabs
+    const [selectedTab, setSelectedTab] = useState('classes');
+    
+    // State für ausgewählte Klasse innerhalb des Stundenplan-Tabs
+    const [selectedClass, setSelectedClass] = useState(null);
 
     // Zustand für Schüler
     const [students, setStudents] = useState([]);
@@ -39,8 +33,18 @@ const AdminDashboard = () => {
         email: ''
     });
 
-    // State for tabs
-    const [selectedTab, setSelectedTab] = useState('classes');
+    // Sample class data - in a real app this would come from a database
+    const [classes, setClasses] = useState([
+        { id: 1, name: "BTA25", teacher: "Fr. Müller" },
+        { id: 2, name: "BTA26", teacher: "Hr. Schmidt" },
+        { id: 3, name: "GD25", teacher: "Hr. Fischer" },
+        { id: 4, name: "GD26", teacher: "Fr. Wagner" },
+        { id: 5, name: "GD27", teacher: "Hr. Weber" },
+        { id: 6, name: "ITA25", teacher: "Fr. Knaber" },
+        { id: 7, name: "ITA26", teacher: "Hr. Schneider" },
+        { id: 8, name: "PTA25", teacher: "Fr. Schuster" },
+        { id: 9, name: "PTA26", teacher: "Hr. Schuster" },
+    ]);
 
     // Klassen vom Backend laden
     useEffect(() => {
@@ -283,16 +287,9 @@ const AdminDashboard = () => {
             </div>
 
             {selectedTab === 'classes' && (
-                <div className="class-list">
-                    <h2>Klassen</h2>
-                    <div className="class-grid">
-                        {classes.map((cls) => (
-                            <div key={cls.id} className="class-card" onClick={() => window.location.href = `/adminClass.html?id=${cls.id}`}>
-                                <h3>{cls.name}</h3>
-                                <p>Klassenlehrer: {cls.teacher}</p>
-                            </div>
-                        ))}
-                    </div>
+                <div className="class-editor-wrapper">
+                    {/* Direkt den ClassEditor als Komponente integrieren */}
+                    <ClassEditor />
                 </div>
             )}
 
