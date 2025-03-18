@@ -260,13 +260,19 @@ const AdminDashboard = () => {
                     className={`tab-button ${selectedTab === 'classes' ? 'active' : ''}`}
                     onClick={() => setSelectedTab('classes')}
                 >
-                    Stundenplan verwalten
+                    Stundenplanverwaltung
                 </button>
                 <button 
                     className={`tab-button ${selectedTab === 'students' ? 'active' : ''}`}
                     onClick={() => setSelectedTab('students')}
                 >
                     Schülerverwaltung
+                </button>
+                <button 
+                    className={`tab-button ${selectedTab === 'teachers' ? 'active' : ''}`}
+                    onClick={() => setSelectedTab('teachers')}
+                >
+                    Lehrerverwaltung
                 </button>
                 <button 
                     className={`tab-button ${selectedTab === 'notifications' ? 'active' : ''}`}

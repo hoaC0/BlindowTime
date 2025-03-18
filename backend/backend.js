@@ -1,4 +1,4 @@
-// backend/backend.js - Aktualisiert mit Stundenplan-Routen
+// backend/backend.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -8,6 +8,7 @@ import lehrerRoutes from './routes/lehrer.routes.js';
 import schuelerRoutes from './routes/schueler.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import stundenplanRoutes from './routes/stundenplan.routes.js';
+import stundenplanManagementRoutes from './routes/stundenplan-management.routes.js';
 
 // __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -28,6 +29,7 @@ app.use('/api/teachers', lehrerRoutes);
 app.use('/api/schueler', schuelerRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/stundenplan', stundenplanRoutes);
+app.use('/api/stundenplan-management', stundenplanManagementRoutes);
 
 // Einfacher Test-Endpunkt
 app.get('/', (req, res) => {
