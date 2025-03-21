@@ -25,7 +25,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routen
-app.use('/api/teachers', lehrerRoutes);
+app.use('/api/lehrer', lehrerRoutes); // Geändert von 'teachers' zu 'lehrer'
 app.use('/api/schueler', schuelerRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/stundenplan', stundenplanRoutes);

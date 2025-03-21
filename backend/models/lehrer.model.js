@@ -3,7 +3,7 @@ import db from '../config/db.config.js';
 class LehrerModel {
     static async getAllLehrer() {
         try {
-            const [rows] = await db.query('SELECT lehrer_id, vorname, nachname, email, krd, tel FROM lehrer ORDER BY nachname, vorname');
+            const [rows] = await db.query('SELECT lehrer_id, vorname, nachname, email, krzl, tel FROM lehrer ORDER BY nachname, vorname');
             return rows;
         } catch (error) {
             console.error('LehrerModel.getAllLehrer:', error);
@@ -13,7 +13,7 @@ class LehrerModel {
 
     static async getLehrerById(id) {
         try {
-            const [rows] = await db.query('SELECT lehrer_id, vorname, nachname, email, krd, tel FROM lehrer WHERE lehrer_id = ?', [id]);
+            const [rows] = await db.query('SELECT lehrer_id, vorname, nachname, email, krzl, tel FROM lehrer WHERE lehrer_id = ?', [id]);
             return rows[0];
         } catch (error) {
             console.error('LehrerModel.getLehrerById:', error);
@@ -23,10 +23,10 @@ class LehrerModel {
 
     static async createLehrer(lehrerData) {
         try {
-            const { vorname, nachname, email, krd, tel } = lehrerData;
+            const { vorname, nachname, email, krzl, tel } = lehrerData;
             const [result] = await db.query(
-                'INSERT INTO lehrer (vorname, nachname, email, krd, tel) VALUES (?, ?, ?, ?, ?)',
-                [vorname, nachname, email, krd, tel]
+                'INSERT INTO lehrer (vorname, nachname, email, krzl, tel) VALUES (?, ?, ?, ?, ?)',
+                [vorname, nachname, email, krzl, tel]
             );
             return result.insertId;
         } catch (error) {
@@ -37,10 +37,10 @@ class LehrerModel {
 
     static async updateLehrer(id, lehrerData) {
         try {
-            const { vorname, nachname, email, krd, tel } = lehrerData;
+            const { vorname, nachname, email, krzl, tel } = lehrerData;
             const [result] = await db.query(
-                'UPDATE lehrer SET vorname = ?, nachname = ?, email = ?, krd = ?, tel = ? WHERE lehrer_id = ?',
-                [vorname, nachname, email, krd, tel, id]
+                'UPDATE lehrer SET vorname = ?, nachname = ?, email = ?, krzl = ?, tel = ? WHERE lehrer_id = ?',
+                [vorname, nachname, email, krzl, tel, id]
             );
             return result.affectedRows > 0;
         } catch (error) {

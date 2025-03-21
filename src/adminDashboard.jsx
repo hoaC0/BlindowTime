@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import './adminDashboard.css';
 import ClassEditor from './classEditor.jsx';
+import TeacherManagement from './TeacherManagement.jsx';
 import AdminNotificationPanel from './AdminNotificationPanel.jsx';
 
 const AdminDashboard = () => {
@@ -55,7 +56,7 @@ const AdminDashboard = () => {
 
     const fetchKlassen = async () => {
         try {
-            const response = await fetch(`${API_URL}/klassen`);
+            const response = await fetch(`${API_URL}/schueler/klassen`);
             if (response.ok) {
                 const data = await response.json();
                 setKlassen(data);
@@ -279,6 +280,18 @@ const AdminDashboard = () => {
                     Lehrerverwaltung
                 </button>
                 <button 
+                    className={`tab-button ${selectedTab === 'rooms' ? 'active' : ''}`}
+                    onClick={() => setSelectedTab('rooms')}
+                >
+                    Räumeverwaltung
+                </button>
+                <button 
+                    className={`tab-button ${selectedTab === 'subjects' ? 'active' : ''}`}
+                    onClick={() => setSelectedTab('subjects')}
+                >
+                    Fächerverwaltung
+                </button>
+                <button 
                     className={`tab-button ${selectedTab === 'notifications' ? 'active' : ''}`}
                     onClick={() => setSelectedTab('notifications')}
                 >
@@ -457,6 +470,10 @@ const AdminDashboard = () => {
                         </div>
                     )}
                 </div>
+            )}
+            
+            {selectedTab === 'teachers' && (
+                <TeacherManagement />
             )}
 
             {selectedTab === 'notifications' && (
