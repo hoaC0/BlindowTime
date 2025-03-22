@@ -4,6 +4,8 @@ import './adminDashboard.css';
 import ClassEditor from './classEditor.jsx';
 import TeacherManagement from './TeacherManagement.jsx';
 import AdminNotificationPanel from './AdminNotificationPanel.jsx';
+import RoomManagement from './RoomManagement.jsx';
+import SubjectManagement from './SubjectManagement.jsx';
 
 const AdminDashboard = () => {
     // API-URL für Backend-Anfragen
@@ -478,6 +480,14 @@ const AdminDashboard = () => {
 
             {selectedTab === 'notifications' && (
                 <AdminNotificationPanel />
+            )}
+
+            {selectedTab === 'rooms' && (
+                <RoomManagement />
+            )}
+
+            {selectedTab === 'subjects' && (
+                <SubjectManagement />
             )}
         </div>
     );
