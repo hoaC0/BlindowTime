@@ -1,0 +1,320 @@
+/* src/MensaAdmin.css */
+.mensa-admin-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    font-family: 'Lato', sans-serif;
+  }
+  
+  .mensa-admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .mensa-admin-header h1 {
+    color: #0f3c63;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  
+  .week-selector {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .week-button {
+    background-color: #f0f7ff;
+    border: 1px solid #0f3c63;
+    color: #0f3c63;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .week-button:hover {
+    background-color: #0f3c63;
+    color: white;
+  }
+  
+  .active-week {
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: #0f3c63;
+    padding: 6px 12px;
+    background-color: #f0f7ff;
+    border-radius: 20px;
+  }
+  
+  .publish-button {
+    background-color: #0f3c63;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .publish-button:hover {
+    background-color: #0a2842;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(15, 60, 99, 0.15);
+  }
+  
+  .publish-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .loading-indicator {
+    text-align: center;
+    padding: 20px;
+    color: #6c757d;
+    font-weight: 500;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #dc3545;
+  }
+  
+  .success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #28a745;
+  }
+  
+  /* Mensaplan-Grid */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .menu-card {
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+  
+  .menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+  
+  .menu-card.editing {
+    border: 2px solid #0f3c63;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(15, 60, 99, 0.15);
+  }
+  
+  .menu-card-header {
+    background-color: #0f3c63;
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .menu-card-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  .menu-date {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+  
+  .edit-button {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .edit-button:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  
+  /* Menü-Details */
+  .menu-details {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .menu-item {
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9fafb;
+  }
+  
+  .menu-item h3 {
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .menu-item p {
+    margin: 0;
+    font-size: 1rem;
+    color: #212529;
+    font-weight: 500;
+  }
+  
+  .menu-item.vegetarisch {
+    background-color: #f0fff0;
+    border-left: 3px solid #28a745;
+  }
+  
+  .menu-price {
+    margin-top: 5px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-align: right;
+    color: #0f3c63;
+  }
+  
+  /* Bearbeitungsformular */
+  .menu-form {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #495057;
+  }
+  
+  .form-group input {
+    padding: 10px 14px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+  }
+  
+  .form-group input:focus {
+    border-color: #0f3c63;
+    box-shadow: 0 0 0 3px rgba(15, 60, 99, 0.1);
+    outline: none;
+  }
+  
+  .form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  
+  .cancel-button {
+    background: none;
+    border: 1px solid #ced4da;
+    color: #495057;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .save-button {
+    background-color: #0f3c63;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .cancel-button:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .save-button:hover {
+    background-color: #0a2842;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(15, 60, 99, 0.1);
+  }
+  
+  .save-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .mensa-admin-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .publish-button {
+      width: 100%;
+    }
+    
+    .menu-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .menu-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }

@@ -1,0 +1,362 @@
+.dashboard-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.dashboard-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Mensa-container for full width */
+.mensa-container {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.mensa-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mensa-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+  background-color: #0f3c63;
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.view-all {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.view-all:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.card-content {
+  padding: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* ToDo Card Styles */
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  margin-bottom: 10px;
+  transition: background-color 0.2s;
+}
+
+.todo-item:hover {
+  background-color: #f0f7ff;
+}
+
+.todo-checkbox {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #0f3c63;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.todo-checkbox:checked {
+  background-color: #0f3c63;
+}
+
+.todo-checkbox:checked::after {
+  content: "✓";
+  font-size: 14px;
+  color: white;
+  position: absolute;
+  left: 4px;
+  top: -2px;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 14px;
+}
+
+.todo-completed .todo-text {
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px 20px;
+  color: #6c757d;
+}
+
+.empty-state p {
+  margin-bottom: 15px;
+}
+
+.add-new {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #0f3c63;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-decoration: none;
+}
+
+.add-new:hover {
+  background-color: #0a2842;
+}
+
+/* Calendar Card Styles */
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar-day {
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  text-align: center;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-name {
+  font-size: 12px;
+  color: #6c757d;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.day-number {
+  font-size: 16px;
+  font-weight: bold;
+  color: #0f3c63;
+  margin-bottom: 8px;
+}
+
+.today {
+  background-color: #e7f5ff;
+  border: 1px solid #0f3c63;
+}
+
+.calendar-event {
+  background-color: #0f3c63;
+  color: white;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-bottom: 4px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Verbesserte Stundenplan-Darstellung im Dashboard */
+.next-class {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-left: 3px solid #0f3c63;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.next-class:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.next-class-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.next-class-title {
+  font-weight: 600;
+  color: #0f3c63;
+  font-size: 18px;
+  margin: 0;
+}
+
+.class-time {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.class-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.class-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-label {
+  color: #6c757d;
+  font-size: 13px;
+  width: 60px;
+}
+
+.detail-value {
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.today-schedule {
+  margin-top: 24px;
+}
+
+.today-schedule h3 {
+  color: #0f3c63;
+  font-size: 16px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.schedule-class {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.schedule-class:hover {
+  background-color: #f0f7ff;
+  transform: translateY(-2px);
+}
+
+.schedule-class-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.class-number {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0f3c63;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.schedule-subject {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.schedule-time {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.empty-schedule {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  color: #6c757d;
+}
+
+.error-message {
+  padding: 10px;
+  background-color: #f8d7da;
+  color: #721c24;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.loading-message {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-header h2 {
+    font-size: 18px;
+  }
+}
