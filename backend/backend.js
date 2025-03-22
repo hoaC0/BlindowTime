@@ -9,6 +9,8 @@ import schuelerRoutes from './routes/schueler.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import stundenplanRoutes from './routes/stundenplan.routes.js';
 import stundenplanManagementRoutes from './routes/stundenplan-management.routes.js';
+import raeumeRoutes from './routes/raeume.routes.js';
+import faecherRoutes from './routes/faecher.routes.js';
 
 // __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -25,11 +27,13 @@ app.use(cors());
 app.use(express.json());
 
 // Routen
-app.use('/api/lehrer', lehrerRoutes); // Geändert von 'teachers' zu 'lehrer'
+app.use('/api/lehrer', lehrerRoutes);
 app.use('/api/schueler', schuelerRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/stundenplan', stundenplanRoutes);
 app.use('/api/stundenplan-management', stundenplanManagementRoutes);
+app.use('/api/raeume', raeumeRoutes);
+app.use('/api/faecher', faecherRoutes);
 
 // Einfacher Test-Endpunkt
 app.get('/', (req, res) => {
