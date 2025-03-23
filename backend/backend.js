@@ -11,6 +11,7 @@ import stundenplanRoutes from './routes/stundenplan.routes.js';
 import stundenplanManagementRoutes from './routes/stundenplan-management.routes.js';
 import raeumeRoutes from './routes/raeume.routes.js';
 import faecherRoutes from './routes/faecher.routes.js';
+import mensaRoutes from './routes/mensa.routes.js';
 
 // __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -34,6 +35,7 @@ app.use('/api/stundenplan', stundenplanRoutes);
 app.use('/api/stundenplan-management', stundenplanManagementRoutes);
 app.use('/api/raeume', raeumeRoutes);
 app.use('/api/faecher', faecherRoutes);
+app.use('/api/mensa', mensaRoutes);
 
 // Einfacher Test-Endpunkt
 app.get('/', (req, res) => {

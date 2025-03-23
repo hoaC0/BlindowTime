@@ -1,0 +1,50 @@
+{
+  "12": [
+    {
+      "tag": "Montag",
+      "datum": "24.03.2025",
+      "hauptgericht": "dwadwada",
+      "vegetarisch": "dwadad",
+      "beilage": "dwadada",
+      "nachtisch": "adadad",
+      "preis": "4,20 €",
+      "woche": 12
+    },
+    {
+      "tag": "Dienstag",
+      "datum": "25.03.2025",
+      "hauptgericht": "",
+      "vegetarisch": "",
+      "beilage": "",
+      "nachtisch": "",
+      "preis": "4,20 €"
+    },
+    {
+      "tag": "Mittwoch",
+      "datum": "26.03.2025",
+      "hauptgericht": "",
+      "vegetarisch": "",
+      "beilage": "",
+      "nachtisch": "",
+      "preis": "4,20 €"
+    },
+    {
+      "tag": "Donnerstag",
+      "datum": "27.03.2025",
+      "hauptgericht": "",
+      "vegetarisch": "",
+      "beilage": "",
+      "nachtisch": "",
+      "preis": "4,20 €"
+    },
+    {
+      "tag": "Freitag",
+      "datum": "28.03.2025",
+      "hauptgericht": "",
+      "vegetarisch": "",
+      "beilage": "",
+      "nachtisch": "",
+      "preis": "4,20 €"
+    }
+  ]
+}
