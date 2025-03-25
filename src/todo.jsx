@@ -6,9 +6,8 @@ import './styles/todo.css';
 function TodoList() {
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [filter, setFilter] = useState('all'); // 'all', 'active', 'completed'
-
-  // Load tasks from cookies when component mounts
+  const [filter, setFilter] = useState('all'); 
+ 
   useEffect(() => {
     const savedTasks = getCookie('tasks');
     if (savedTasks) {
