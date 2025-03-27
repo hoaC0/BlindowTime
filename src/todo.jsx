@@ -6,8 +6,9 @@ import './styles/todo.css';
 function TodoList() {
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [filter, setFilter] = useState('all'); 
- 
+  const [filter, setFilter] = useState('all');
+
+  
   useEffect(() => {
     const savedTasks = getCookie('tasks');
     if (savedTasks) {
@@ -20,14 +21,14 @@ function TodoList() {
     }
   }, []);
 
-  // Save tasks to cookies whenever tasks change
+
   useEffect(() => {
     if (tasks.length > 0) {
       setCookie('tasks', JSON.stringify(tasks), 30); // expires in 30 days
     }
   }, [tasks]);
 
-  // Set a cookie with expiration date
+  // Sset cookie
   const setCookie = (name, value, days) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
@@ -46,7 +47,7 @@ function TodoList() {
     return null;
   };
 
-  // Add a new task
+  // add new task
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue.trim() !== '') {
