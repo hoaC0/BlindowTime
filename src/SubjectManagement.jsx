@@ -1,18 +1,18 @@
-// src/SubjectManagement.jsx
+
 import React, { useState, useEffect } from 'react';
 import './styles/SubjectManagement.css';
 
 const SubjectManagement = () => {
-    // API-URL für Backend-Anfragen
+   
     const API_URL = 'http://localhost:3001/api';
 
-    // Zustand für Fächer
+   
     const [subjects, setSubjects] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
 
-    // Form states for adding/editing subjects
+ 
     const [showSubjectForm, setShowSubjectForm] = useState(false);
     const [currentSubject, setCurrentSubject] = useState(null);
     const [subjectFormData, setSubjectFormData] = useState({
@@ -21,7 +21,7 @@ const SubjectManagement = () => {
         farbe: '#0f3c63'
     });
 
-    // Fächer vom Backend laden
+ 
     useEffect(() => {
         fetchSubjects();
     }, []);
@@ -40,7 +40,7 @@ const SubjectManagement = () => {
             setError('Fehler beim Laden der Fächer: ' + err.message);
             console.error('Fehler beim Laden der Fächer:', err);
             
-            // Temporäre Dummy-Daten für die Entwicklung
+ // temp
             setSubjects([
                 { fach_id: 1, name: 'Mathematik', kurzname: 'MAT', farbe: '#428FF4' },
                 { fach_id: 2, name: 'Deutsch', kurzname: 'DEU', farbe: '#EA4335' },
