@@ -4,16 +4,16 @@ import * as notificationController from '../controllers/notification.controller.
 
 const router = express.Router();
 
-// Alle Benachrichtigungen abrufen
+// alle notifications holen
 router.get('/', notificationController.getAllNotifications);
 
-// Neue Benachrichtigung erstellen
+// NEUE NACHRICHT ERSTELLEN!!
 router.post('/', notificationController.createNotification);
 
-// Benachrichtigung als gelesen markieren
+// markiert nachricht als gelesen
 router.put('/:id/read', notificationController.markAsRead);
 
-// Benachrichtigung löschen
+// loescht eine nachricht
 router.delete('/:id', notificationController.deleteNotification);
 
 export default router;

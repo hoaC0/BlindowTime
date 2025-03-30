@@ -1,6 +1,6 @@
-// backend/controllers/stundenplan.controller.js
 import StundenplanModel from '../models/stundenplan.model.js';
 
+// HOL STUNDENPLAN FUER EINE KLASSE!
 export const getStundenplanByKlasse = async (req, res) => {
   try {
     const klassenName = req.params.klassenName;
@@ -17,6 +17,7 @@ export const getStundenplanByKlasse = async (req, res) => {
   }
 };
 
+// gibt alle verhandene klassen zurueck
 export const getAlleKlassen = async (req, res) => {
   try {
     const klassen = await StundenplanModel.getAlleKlassen();

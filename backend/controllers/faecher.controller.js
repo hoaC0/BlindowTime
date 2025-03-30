@@ -1,6 +1,6 @@
-// backend/controllers/faecher.controller.js
 import FaecherModel from '../models/faecher.model.js';
 
+// liste aller faecher holen 
 export const getAllFaecher = async (req, res) => {
     try {
         const faecher = await FaecherModel.getAllFaecher();
@@ -10,6 +10,7 @@ export const getAllFaecher = async (req, res) => {
     }
 };
 
+// EIN FACH MIT ID HOLEN!
 export const getFachById = async (req, res) => {
     try {
         const id = req.params.id;
@@ -25,6 +26,7 @@ export const getFachById = async (req, res) => {
     }
 };
 
+// neues fach erstellen
 export const createFach = async (req, res) => {
     try {
         const fachId = await FaecherModel.createFach(req.body);
@@ -34,6 +36,8 @@ export const createFach = async (req, res) => {
     }
 };
 
+// fach aktualisieren
+// bekommt neue werte aus body
 export const updateFach = async (req, res) => {
     try {
         const id = req.params.id;
@@ -49,6 +53,7 @@ export const updateFach = async (req, res) => {
     }
 };
 
+// loescht fach
 export const deleteFach = async (req, res) => {
     try {
         const id = req.params.id;

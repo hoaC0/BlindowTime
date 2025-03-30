@@ -1,5 +1,6 @@
 import LehrerModel from '../models/lehrer.model.js';
 
+// ALLE LEHRER HOLEN!!!
 export const getAllTeachers = async (req, res) => {
   try {
     const teachers = await LehrerModel.getAllLehrer();
@@ -9,6 +10,7 @@ export const getAllTeachers = async (req, res) => {
   }
 };
 
+// sucht nach lehrer mit einer bestimmten ID
 export const getTeacherById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -24,6 +26,7 @@ export const getTeacherById = async (req, res) => {
   }
 };
 
+// neuer lehrer
 export const createTeacher = async (req, res) => {
   try {
     const teacherId = await LehrerModel.createLehrer(req.body);
@@ -33,6 +36,7 @@ export const createTeacher = async (req, res) => {
   }
 };
 
+// aktualisiert lehrer
 export const updateTeacher = async (req, res) => {
   try {
     const id = req.params.id;
@@ -48,6 +52,7 @@ export const updateTeacher = async (req, res) => {
   }
 };
 
+// del lehrer von db
 export const deleteTeacher = async (req, res) => {
   try {
     const id = req.params.id;

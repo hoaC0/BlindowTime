@@ -1,6 +1,7 @@
 import db from '../config/db.config.js';
 
 class RaeumeModel {
+    // ALLE RAEUME HOLEN
     static async getAllRaeume() {
         try {
             const [rows] = await db.query('SELECT raum_id, nummer, name FROM raeume ORDER BY nummer');
@@ -11,6 +12,7 @@ class RaeumeModel {
         }
     }
 
+    // raum mit id
     static async getRaumById(id) {
         try {
             const [rows] = await db.query('SELECT raum_id, nummer, name FROM raeume WHERE raum_id = ?', [id]);
@@ -21,6 +23,8 @@ class RaeumeModel {
         }
     }
 
+    // erstellt neuen raum
+    // bekommt daten als objekt
     static async createRaum(raumData) {
         try {
             const { nummer, name } = raumData;
@@ -35,6 +39,7 @@ class RaeumeModel {
         }
     }
 
+    // raum aendern 
     static async updateRaum(id, raumData) {
         try {
             const { nummer, name } = raumData;
@@ -49,6 +54,7 @@ class RaeumeModel {
         }
     }
 
+    // loescht raum von db
     static async deleteRaum(id) {
         try {
             const [result] = await db.query('DELETE FROM raeume WHERE raum_id = ?', [id]);

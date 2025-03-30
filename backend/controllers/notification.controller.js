@@ -1,4 +1,3 @@
-// backend/controllers/notification.controller.js
 import NotificationModel from '../models/notification.model.js.js';
 
 export const getAllNotifications = async (req, res) => {
@@ -10,6 +9,7 @@ export const getAllNotifications = async (req, res) => {
   }
 };
 
+// NEUE NACHRICHT ANLEGEN!
 export const createNotification = async (req, res) => {
   try {
     const notificationId = await NotificationModel.createNotification(req.body);
@@ -22,6 +22,8 @@ export const createNotification = async (req, res) => {
   }
 };
 
+// marki(e)rt eine nachricht als gelesen
+// notification id kommt als parameter
 export const markAsRead = async (req, res) => {
   try {
     const id = req.params.id;
@@ -37,6 +39,7 @@ export const markAsRead = async (req, res) => {
   }
 };
 
+// benachrichtigung loeschen
 export const deleteNotification = async (req, res) => {
   try {
     const id = req.params.id;

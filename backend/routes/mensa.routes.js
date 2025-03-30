@@ -1,19 +1,18 @@
-// backend/routes/mensa.routes.js
 import express from 'express';
 import * as mensaController from '../controllers/mensa.controller.js';
 
 const router = express.Router();
 
-// Heutiges Menü abrufen
+// heutiges menue abrufen
 router.get('/heute', mensaController.getTodaysMenu);
 
-// Wochenplan abrufen
+// wochenplan abrufen
 router.get('/wochenplan/:weekNumber', mensaController.getWeeklyMenu);
 
-// Tagesmenü aktualisieren
+// tagesmenue aktualisieren
 router.put('/speiseplan/:weekNumber/:day', mensaController.updateDayMenu);
 
-// Wochenplan veröffentlichen
+// wochenplan veroeffentlichen
 router.post('/wochenplan/:weekNumber/publish', mensaController.publishWeeklyMenu);
 
 export default router;

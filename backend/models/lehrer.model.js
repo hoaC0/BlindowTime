@@ -1,6 +1,7 @@
 import db from '../config/db.config.js';
 
 class LehrerModel {
+    // holt ALLE lehrer aus DB
     static async getAllLehrer() {
         try {
             const [rows] = await db.query('SELECT lehrer_id, vorname, nachname, email, krzl, tel FROM lehrer ORDER BY nachname, vorname');
@@ -11,6 +12,7 @@ class LehrerModel {
         }
     }
 
+    // findet lehrer nach id
     static async getLehrerById(id) {
         try {
             const [rows] = await db.query('SELECT lehrer_id, vorname, nachname, email, krzl, tel FROM lehrer WHERE lehrer_id = ?', [id]);
@@ -21,6 +23,8 @@ class LehrerModel {
         }
     }
 
+    // erstellt neuen lehrer
+    // bekommt alle daten als objekt
     static async createLehrer(lehrerData) {
         try {
             const { vorname, nachname, email, krzl, tel } = lehrerData;
@@ -35,6 +39,7 @@ class LehrerModel {
         }
     }
 
+    // aendert lehrerdaten in db
     static async updateLehrer(id, lehrerData) {
         try {
             const { vorname, nachname, email, krzl, tel } = lehrerData;
@@ -49,6 +54,7 @@ class LehrerModel {
         }
     }
 
+    // LOESCHT LEHRER!!!
     static async deleteLehrer(id) {
         try {
             const [result] = await db.query('DELETE FROM lehrer WHERE lehrer_id = ?', [id]);

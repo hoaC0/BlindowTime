@@ -1,7 +1,6 @@
-// backend/controllers/stundenplan-management.controller.js
 import StundenplanManagementModel from '../models/stundenplan-management.model.js';
 
-// Alle Klassen abrufen
+// holt alle klassen aus der db
 export const getAllClasses = async (req, res) => {
   try {
     const klassen = await StundenplanManagementModel.getAllClasses();
@@ -12,7 +11,7 @@ export const getAllClasses = async (req, res) => {
   }
 };
 
-// Alle Fächer abrufen
+// ALLE FAECHER VON DB HOLEN 
 export const getAllSubjects = async (req, res) => {
   try {
     const subjects = await StundenplanManagementModel.getAllSubjects();
@@ -23,7 +22,7 @@ export const getAllSubjects = async (req, res) => {
   }
 };
 
-// Alle Lehrer abrufen
+// lehrer liste aus db
 export const getAllTeachers = async (req, res) => {
   try {
     const teachers = await StundenplanManagementModel.getAllTeachers();
@@ -34,7 +33,7 @@ export const getAllTeachers = async (req, res) => {
   }
 };
 
-// Alle Räume abrufen
+// raeume werden hier geholt
 export const getAllRooms = async (req, res) => {
   try {
     const rooms = await StundenplanManagementModel.getAllRooms();
@@ -45,7 +44,9 @@ export const getAllRooms = async (req, res) => {
   }
 };
 
-// Stundenplan für eine Klasse abrufen
+// stundenplan von einer bestimmten klasse holen
+// wir muessen den klassenNamen verwenden um den richtigen stundenplan zu finden
+// dann wird alles zurueck gegeben
 export const getScheduleForClass = async (req, res) => {
   try {
     const klassenName = req.params.klassenName;
@@ -62,7 +63,7 @@ export const getScheduleForClass = async (req, res) => {
   }
 };
 
-// Unterrichtseinheit aktualisieren
+// unterricht aktualisieren
 export const updateLesson = async (req, res) => {
   try {
     const {
@@ -74,12 +75,12 @@ export const updateLesson = async (req, res) => {
       lehrerId
     } = req.body;
 
-    // Validierung der Pflichtfelder
+    // check if alles da is
     if (!klassenName || !stunde || !tag) {
       return res.status(400).json({ message: 'Klasse, Stunde und Tag sind erforderlich' });
     }
 
-    // Tag in Tagespräfix umwandeln (z.B. "montag" -> "mo")
+    // tag -> tagespräfix (z.B. "montag" -> "mo")
     const tagMapping = {
       "montag": "mo",
       "dienstag": "di",
@@ -114,17 +115,17 @@ export const updateLesson = async (req, res) => {
   }
 };
 
-// Unterrichtseinheit löschen
+// deletes unterricht fuer klasse
 export const deleteLesson = async (req, res) => {
   try {
     const { klassenName, stunde, tag } = req.body;
 
-    // Validierung der Pflichtfelder
+    // pruefen ob alle felder da sind
     if (!klassenName || !stunde || !tag) {
       return res.status(400).json({ message: 'Klasse, Stunde und Tag sind erforderlich' });
     }
 
-    // Tag in Tagespräfix umwandeln
+    // tag in prefix umwandeln
     const tagMapping = {
       "montag": "mo",
       "dienstag": "di",

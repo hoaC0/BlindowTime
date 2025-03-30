@@ -1,4 +1,3 @@
-// backend/backend.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -13,21 +12,21 @@ import raeumeRoutes from './routes/raeume.routes.js';
 import faecherRoutes from './routes/faecher.routes.js';
 import mensaRoutes from './routes/mensa.routes.js';
 
-// __dirname in ES modules
+// dirname in es modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Lade .env aus dem Hauptverzeichnis
+// lade env aus hauptverzeichnis
 dotenv.config({ path: join(dirname(__dirname), '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
+// middleware
 app.use(cors());
 app.use(express.json());
 
-// Routen
+// routen definieren
 app.use('/api/lehrer', lehrerRoutes);
 app.use('/api/schueler', schuelerRoutes);
 app.use('/api/notifications', notificationRoutes);
@@ -37,15 +36,15 @@ app.use('/api/raeume', raeumeRoutes);
 app.use('/api/faecher', faecherRoutes);
 app.use('/api/mensa', mensaRoutes);
 
-// Einfacher Test-Endpunkt
+// test-endpunkt
 app.get('/', (req, res) => {
-  res.json({ message: 'Verbindung zur BlindowTime API hergestellt!' });
+  res.json({ message: 'verbindung zur blindowtime api hergestellt!' });
 });
 
-// Server starten
+// server starten
 app.listen(PORT, () => {
-  console.log(`Server läuft auf Port ${PORT}`);
-  console.log('Umgebungsvariablen:', {
+  console.log(`server laeuft auf port ${PORT}`);
+  console.log('umgebungsvariablen:', {
     PORT: process.env.PORT,
     DB_HOST: process.env.DB_HOST,
     DB_USER: process.env.DB_USER,

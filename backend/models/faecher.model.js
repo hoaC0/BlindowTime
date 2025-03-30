@@ -1,7 +1,7 @@
-// backend/models/faecher.model.js
 import db from '../config/db.config.js';
 
 class FaecherModel {
+    // ALLE FAECHER MIT FARBEN!!
     static async getAllFaecher() {
         try {
             const [rows] = await db.query('SELECT fach_id, name, kurzname, farbe FROM faecher ORDER BY name');
@@ -12,6 +12,7 @@ class FaecherModel {
         }
     }
 
+    // fach mit bestimmter id
     static async getFachById(id) {
         try {
             const [rows] = await db.query('SELECT fach_id, name, kurzname, farbe FROM faecher WHERE fach_id = ?', [id]);
@@ -22,6 +23,8 @@ class FaecherModel {
         }
     }
 
+    // erstellt ein neues fach
+    // mit name, kurzname und farbe
     static async createFach(fachData) {
         try {
             const { name, kurzname, farbe } = fachData;
@@ -36,6 +39,7 @@ class FaecherModel {
         }
     }
 
+    // aendert fachdaten
     static async updateFach(id, fachData) {
         try {
             const { name, kurzname, farbe } = fachData;
@@ -50,6 +54,7 @@ class FaecherModel {
         }
     }
 
+    // del fach
     static async deleteFach(id) {
         try {
             const [result] = await db.query('DELETE FROM faecher WHERE fach_id = ?', [id]);

@@ -9,6 +9,7 @@ export const getAllSchueler = async (req, res) => {
   }
 };
 
+// holt einen schueler nach ID
 export const getSchuelerById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -24,6 +25,7 @@ export const getSchuelerById = async (req, res) => {
   }
 };
 
+// ALLE SCHUELER AUS EINER KLASSE HOLEN!
 export const getSchuelerByKlasse = async (req, res) => {
   try {
     const klassenId = req.params.klassenId;
@@ -34,11 +36,12 @@ export const getSchuelerByKlasse = async (req, res) => {
   }
 };
 
+// neuen schueler anlegen (mit allen daten)
 export const createSchueler = async (req, res) => {
   try {
     console.log('Request body received:', req.body);
     
-    // Check if we need to rename the field from klassen_id to klasse_id
+    // check if wir umbennen muessen klassen_id -> klasse_id
     let schuelerData = { ...req.body };
     if ('klassen_id' in schuelerData && !('klasse_id' in schuelerData)) {
       console.log('Renaming klassen_id to klasse_id');
@@ -55,11 +58,12 @@ export const createSchueler = async (req, res) => {
   }
 };
 
+// update schueler
 export const updateSchueler = async (req, res) => {
   try {
     console.log('Update request body received:', req.body);
     
-    // Check if we need to rename the field from klassen_id to klasse_id
+    // evtl umbennen
     let schuelerData = { ...req.body };
     if ('klassen_id' in schuelerData && !('klasse_id' in schuelerData)) {
       console.log('Renaming klassen_id to klasse_id in update');
@@ -80,6 +84,7 @@ export const updateSchueler = async (req, res) => {
   }
 };
 
+// entferne schueler von db
 export const deleteSchueler = async (req, res) => {
   try {
     const id = req.params.id;
@@ -96,6 +101,7 @@ export const deleteSchueler = async (req, res) => {
   }
 };
 
+// HOL ALLE KLASSEN
 export const getAllKlassen = async (req, res) => {
   try {
     const klassen = await SchuelerModel.getAllKlassen();

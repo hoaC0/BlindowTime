@@ -3,25 +3,25 @@ import * as schuelerController from '../controllers/schueler.controller.js';
 
 const router = express.Router();
 
-// Klassen abrufen - diese Route muss vor der ID-Route stehen!
+// KLASSEN HOLEN - die MUSS vor id route sein!!
 router.get('/klassen', schuelerController.getAllKlassen);
 
-// Schüler nach Klasse abrufen
+// schueler nach klasse finden
 router.get('/klasse/:klassenId', schuelerController.getSchuelerByKlasse);
 
-// Alle Schüler abrufen
+// alle schueler
 router.get('/', schuelerController.getAllSchueler);
 
-// Schüler nach ID abrufen
+// schueler via id
 router.get('/:id', schuelerController.getSchuelerById);
 
-// Neuen Schüler erstellen
+// neuen schueler anlegen
 router.post('/', schuelerController.createSchueler);
 
-// Schüler aktualisieren
+// update schueler
 router.put('/:id', schuelerController.updateSchueler);
 
-// Schüler löschen
+// del schueler
 router.delete('/:id', schuelerController.deleteSchueler);
 
 export default router;

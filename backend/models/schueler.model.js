@@ -3,7 +3,7 @@ import db from '../config/db.config.js';
 class SchuelerModel {
     static async getAllSchueler() {
         try {
-            // Using klasse_id to match database schema
+            // klasse_id fuer db schema 
             const [rows] = await db.query('SELECT schueler_id, vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email FROM schueler ORDER BY nachname, vorname');
             return rows;
         } catch (error) {
@@ -22,6 +22,7 @@ class SchuelerModel {
         }
     }
 
+    // ALLE SCHUELER EINER KLASSE!
     static async getSchuelerByKlasse(klassenId) {
         try {
             const [rows] = await db.query('SELECT schueler_id, vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email FROM schueler WHERE klasse_id = ? ORDER BY nachname, vorname', [klassenId]);
@@ -32,6 +33,7 @@ class SchuelerModel {
         }
     }
 
+    // erstelle neuen schueler mit allen daten
     static async createSchueler(schuelerData) {
         try {
             const { vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email } = schuelerData;
@@ -46,6 +48,7 @@ class SchuelerModel {
         }
     }
 
+    // schueler update
     static async updateSchueler(id, schuelerData) {
         try {
             const { vorname, nachname, geburtsdatum, klasse_id, adresse, tel, email } = schuelerData;
@@ -60,6 +63,7 @@ class SchuelerModel {
         }
     }
 
+    // SCHUELER LOESCHEN!
     static async deleteSchueler(id) {
         try {
             const [result] = await db.query('DELETE FROM schueler WHERE schueler_id = ?', [id]);
@@ -70,6 +74,7 @@ class SchuelerModel {
         }
     }
 
+    // hol alle klassen
     static async getAllKlassen() {
         try {
             const [rows] = await db.query('SELECT * FROM klassen ORDER BY klassen_id');

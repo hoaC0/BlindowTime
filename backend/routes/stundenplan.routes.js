@@ -4,10 +4,10 @@ import * as stundenplanController from '../controllers/stundenplan.controller.js
 
 const router = express.Router();
 
-// Stundenplan für eine bestimmte Klasse abrufen
+// stundenplan fuer bestimmte klasse
 router.get('/:klassenName', stundenplanController.getStundenplanByKlasse);
 
-// Alle verfügbaren Klassen mit Stundenplänen abrufen
+// ALLE KLASSEN MIT STUNDENPLAENEN!!!
 router.get('/klassen/alle', stundenplanController.getAlleKlassen);
 
 export default router;

@@ -1,13 +1,14 @@
-// backend/models/stundenplan.model.js
 import db from '../config/db.config.js';
 
 class StundenplanModel {
+  // HOL DEN STUNDENPLAN FUER EINE KLASSE!
+  // klassenmame = z.B. ITA25
   static async getStundenplanByKlasse(klassenName) {
     try {
-      // Tabellennamen folgen dem Muster: stundenplan{klassenName} (kleinbuchstaben)
+      // tabelle = stundenplan + klassenname kleingeschrieben
       const tabellenName = `stundenplan${klassenName.toLowerCase()}`;
       
-      // Überprüfen, ob die Tabelle existiert, um SQL-Injection zu verhindern
+      // checken ob tabelle existiert (sql injection verhindern)
       const [tabellen] = await db.query(`SHOW TABLES LIKE ?`, [tabellenName]);
       
       if (tabellen.length === 0) {
@@ -15,7 +16,7 @@ class StundenplanModel {
         return [];
       }
       
-      // Abfrage der Stundenplandaten mit verknüpften Informationen aus verwandten Tabellen
+      // stunden abrufen mit allen infos
       const [zeilen] = await db.query(`
         SELECT 
           s.id,
@@ -98,17 +99,18 @@ class StundenplanModel {
     }
   }
 
+  // alle klassen die stundenplan haben
   static async getAlleKlassen() {
     try {
-      // Überprüfen aller verfügbaren Stundenpläne durch Suche nach Tabellen mit dem Präfix "stundenplan"
+      // alle stundenplantabellen in DB finden
       const [tabellen] = await db.query(`
         SHOW TABLES LIKE 'stundenplan%'
       `);
       
-      // Aufbereiten der Ergebnisse, um nur die Klassennamen zurückzugeben
+      // klassennamen extrahieren aus tabellennamen
       const klassen = tabellen.map(row => {
         const tabellenName = Object.values(row)[0];
-        // Extrahieren des Klassennamens aus dem Tabellennamen (z.B. "stundenplanita25" -> "ITA25")
+        // z.B. "stundenplanita25" -> "ITA25"
         const klassenName = tabellenName.replace('stundenplan', '').toUpperCase();
         return { name: klassenName };
       });

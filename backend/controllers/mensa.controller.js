@@ -1,53 +1,52 @@
-// backend/controllers/mensa.controller.js
 import MensaModel from '../models/mensa.model.js';
 
-// Heutiges Mensaangebot abrufen
+// heutiges mensaangebot abrufen
 export const getTodaysMenu = async (req, res) => {
   try {
     const menu = await MensaModel.getTodaysMenu();
     
     if (!menu) {
-      return res.status(404).json({ message: 'Kein Menü für heute gefunden' });
+      return res.status(404).json({ message: 'kein menue fuer heute gefunden' });
     }
     
     res.json(menu);
   } catch (error) {
-    console.error('Fehler beim Abrufen des heutigen Menüs:', error);
+    console.error('fehler beim abrufen des heutigen menues:', error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// Wochenplan abrufen
+// wochenplan holen
 export const getWeeklyMenu = async (req, res) => {
   try {
     const weekNumber = parseInt(req.params.weekNumber) || MensaModel.getCurrentWeek();
     const weeklyMenu = await MensaModel.getWeeklyMenu(weekNumber);
     
     if (!weeklyMenu || weeklyMenu.length === 0) {
-      return res.status(404).json({ message: `Kein Menü für Woche ${weekNumber} gefunden` });
+      return res.status(404).json({ message: `kein menue fuer woche ${weekNumber} gefunden` });
     }
     
     res.json(weeklyMenu);
   } catch (error) {
-    console.error(`Fehler beim Abrufen des Menüs für Woche ${req.params.weekNumber}:`, error);
+    console.error(`fehler beim abrufen des menues fuer woche ${req.params.weekNumber}:`, error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// Tagesmenü aktualisieren
+// tagesmenue aktualisieren
 export const updateDayMenu = async (req, res) => {
   try {
     const { weekNumber, day } = req.params;
     const menuData = req.body;
     
-    // Validierung der Daten
+    // validierung
     if (!menuData.hauptgericht || !menuData.vegetarisch) {
       return res.status(400).json({ 
-        message: 'Hauptgericht und vegetarisches Gericht sind erforderlich' 
+        message: 'hauptgericht und vegetarisches gericht sind erforderlich' 
       });
     }
     
-    // Datum aus der Wochennummer und dem Tag berechnen, falls nicht angegeben
+    // datum aus wochennummer und tag berechnen falls nicht angegeben
     if (!menuData.datum) {
       menuData.datum = MensaModel.getDateForWeekday(day, parseInt(weekNumber));
     }
@@ -56,35 +55,35 @@ export const updateDayMenu = async (req, res) => {
     
     res.status(200).json({
       success: true,
-      message: `Menü für ${day} in Woche ${weekNumber} erfolgreich aktualisiert`,
+      message: `menue fuer ${day} in woche ${weekNumber} erfolgreich aktualisiert`,
       data: result
     });
   } catch (error) {
-    console.error(`Fehler beim Aktualisieren des Menüs für Tag ${req.params.day}:`, error);
+    console.error(`fehler beim aktualisieren des menues fuer tag ${req.params.day}:`, error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// Wochenplan veröffentlichen
+// wochenplan veroeffentlichen
 export const publishWeeklyMenu = async (req, res) => {
   try {
     const weekNumber = parseInt(req.params.weekNumber);
     const menuData = req.body;
     
-    // Validierung
+    // validierung
     if (!Array.isArray(menuData) || menuData.length === 0) {
-      return res.status(400).json({ message: 'Gültige Menüdaten sind erforderlich' });
+      return res.status(400).json({ message: 'gueltige menuedaten sind erforderlich' });
     }
     
     const result = await MensaModel.publishWeeklyMenu(weekNumber, menuData);
     
     res.status(200).json({
       success: true,
-      message: `Wochenplan für Woche ${weekNumber} erfolgreich veröffentlicht`,
+      message: `wochenplan fuer woche ${weekNumber} erfolgreich veroeffentlicht`,
       data: result
     });
   } catch (error) {
-    console.error(`Fehler beim Veröffentlichen des Wochenplans für Woche ${req.params.weekNumber}:`, error);
+    console.error(`fehler beim veroeffentlichen des wochenplans fuer woche ${req.params.weekNumber}:`, error);
     res.status(500).json({ message: error.message });
   }
 };

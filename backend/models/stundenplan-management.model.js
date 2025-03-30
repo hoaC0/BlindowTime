@@ -1,8 +1,7 @@
-// backend/models/stundenplan-management.model.js
 import db from '../config/db.config.js';
 
 class StundenplanManagementModel {
-  // Alle Klassen abrufen
+  // gibt alle klassen zurueck
   static async getAllClasses() {
     try {
       const [rows] = await db.query('SELECT klassen_id, name FROM klassen ORDER BY name');
@@ -13,7 +12,7 @@ class StundenplanManagementModel {
     }
   }
 
-  // Alle Fächer abrufen
+  // LIEFERT ALLE FAECHER!!! inklusive farben usw
   static async getAllSubjects() {
     try {
       const [rows] = await db.query('SELECT fach_id, name, kurzname, farbe FROM faecher ORDER BY name');
@@ -24,7 +23,7 @@ class StundenplanManagementModel {
     }
   }
 
-  // Alle Lehrer abrufen
+  // lehrer abrufen - brauchen wir fuer stundenplan
   static async getAllTeachers() {
     try {
       const [rows] = await db.query('SELECT lehrer_id, vorname, nachname, krzl FROM lehrer ORDER BY nachname, vorname');
@@ -35,7 +34,7 @@ class StundenplanManagementModel {
     }
   }
 
-  // Alle Räume abrufen
+  // hol alle raeume aus db
   static async getAllRooms() {
     try {
       const [rows] = await db.query('SELECT raum_id, nummer, name FROM raeume ORDER BY nummer');
@@ -46,13 +45,13 @@ class StundenplanManagementModel {
     }
   }
 
-  // Stundenplan für eine bestimmte Klasse abrufen
+  // stundenplan fuer klasse laden
   static async getScheduleForClass(klassenName) {
     try {
-      // Tabellenname ermitteln (stundenplan + klassenname in Kleinbuchstaben)
+      // tabellenname: stundenplan + klassenname kleingeschrieben
       const tabellenName = `stundenplan${klassenName.toLowerCase()}`;
       
-      // Überprüfen, ob die Tabelle existiert
+      // testen ob tabelle existiert
       const [tabellen] = await db.query(`SHOW TABLES LIKE ?`, [tabellenName]);
       
       if (tabellen.length === 0) {
@@ -60,7 +59,7 @@ class StundenplanManagementModel {
         return [];
       }
       
-      // Stundenplan-Daten abrufen
+      // stundenplan abrufen
       const [zeilen] = await db.query(`
         SELECT * FROM ${tabellenName} ORDER BY stunde
       `);
@@ -72,29 +71,29 @@ class StundenplanManagementModel {
     }
   }
 
-  // Unterricht aktualisieren oder hinzufügen
+  // unterricht hinzufuegen/aendern
   static async updateLesson(klassenName, stunde, tag, fachId, raumId, lehrerId) {
     try {
       const tabellenName = `stundenplan${klassenName.toLowerCase()}`;
       
-      // Überprüfen, ob die Tabelle existiert
+      // check ob tabelle da ist
       const [tabellen] = await db.query(`SHOW TABLES LIKE ?`, [tabellenName]);
       
       if (tabellen.length === 0) {
         throw new Error(`Stundenplan für ${klassenName} existiert nicht`);
       }
       
-      // Aktualisiere die entsprechenden Felder basierend auf dem Tag
+      // alle werte aktualisieren je nach tag
       const fachField = `fach_${tag}`;
       const raumField = `raum_${tag}`;
       const lehrerField = `lehrer_${tag}`;
       
-      // Falls null oder undefined übergeben wird, setze explizit NULL in der Datenbank
+      // wenn null uebergeben wird setzen wir NULL in der DB
       const fachValue = fachId !== undefined && fachId !== null ? fachId : null;
       const raumValue = raumId !== undefined && raumId !== null ? raumId : null;
       const lehrerValue = lehrerId !== undefined && lehrerId !== null ? lehrerId : null;
       
-      // SQL-Statement mit Platzhaltern für die Werte
+      // SQL query generieren
       const query = `
         UPDATE ${tabellenName} 
         SET ${fachField} = ?, ${raumField} = ?, ${lehrerField} = ?
@@ -120,10 +119,10 @@ class StundenplanManagementModel {
     }
   }
 
-  // Unterricht löschen (auf NULL setzen)
+  // del unterricht
   static async deleteLesson(klassenName, stunde, tag) {
     try {
-      // Ruf einfach updateLesson mit NULL-Werten auf
+      // wieder updateLesson aufrufen mit NULL werten
       return await this.updateLesson(klassenName, stunde, tag, null, null, null);
     } catch (error) {
       console.error('Fehler beim Löschen des Unterrichts:', error);

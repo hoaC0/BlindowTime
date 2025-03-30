@@ -1,5 +1,6 @@
 import RaeumeModel from '../models/raeume.model.js';
 
+// holt alle raeume aus db
 export const getAllRaeume = async (req, res) => {
   try {
     const raeume = await RaeumeModel.getAllRaeume();
@@ -9,6 +10,7 @@ export const getAllRaeume = async (req, res) => {
   }
 };
 
+// RAUM MIT ID HOLEN (ein bestimmter raum)
 export const getRaumById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -24,6 +26,8 @@ export const getRaumById = async (req, res) => {
   }
 };
 
+// neuen raum erstellen
+// daten kommen aus request body
 export const createRaum = async (req, res) => {
   try {
     const raumId = await RaeumeModel.createRaum(req.body);
@@ -33,6 +37,7 @@ export const createRaum = async (req, res) => {
   }
 };
 
+// aendert raum
 export const updateRaum = async (req, res) => {
   try {
     const id = req.params.id;
@@ -48,6 +53,7 @@ export const updateRaum = async (req, res) => {
   }
 };
 
+// del raum
 export const deleteRaum = async (req, res) => {
   try {
     const id = req.params.id;
