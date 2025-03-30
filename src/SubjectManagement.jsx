@@ -1,18 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import './styles/SubjectManagement.css';
 
 const SubjectManagement = () => {
-   
     const API_URL = 'http://localhost:3001/api';
 
-   
     const [subjects, setSubjects] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
 
- 
     const [showSubjectForm, setShowSubjectForm] = useState(false);
     const [currentSubject, setCurrentSubject] = useState(null);
     const [subjectFormData, setSubjectFormData] = useState({
@@ -21,7 +17,6 @@ const SubjectManagement = () => {
         farbe: '#0f3c63'
     });
 
- 
     useEffect(() => {
         fetchSubjects();
     }, []);
@@ -38,9 +33,6 @@ const SubjectManagement = () => {
             setError(null);
         } catch (err) {
             setError('Fehler beim Laden der Fächer: ' + err.message);
-            console.error('Fehler beim Laden der Fächer:', err);
-            
- // temp
             setSubjects([
                 { fach_id: 1, name: 'Mathematik', kurzname: 'MAT', farbe: '#428FF4' },
                 { fach_id: 2, name: 'Deutsch', kurzname: 'DEU', farbe: '#EA4335' },
@@ -64,7 +56,6 @@ const SubjectManagement = () => {
         }
     };
 
-    // Formular-Handler für Fächer
     const handleSubjectFormChange = (e) => {
         const { name, value } = e.target;
         setSubjectFormData({
@@ -95,10 +86,8 @@ const SubjectManagement = () => {
 
     const handleSubjectFormSubmit = async (e) => {
         e.preventDefault();
-        
         try {
             if (currentSubject) {
-                // Aktualisieren eines bestehenden Fachs
                 const response = await fetch(`${API_URL}/faecher/${currentSubject.fach_id}`, {
                     method: 'PUT',
                     headers: {
@@ -106,20 +95,15 @@ const SubjectManagement = () => {
                     },
                     body: JSON.stringify(subjectFormData),
                 });
-                
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
-                // Aktualisiere die lokale Liste
                 const updatedSubjects = subjects.map(s => 
                     s.fach_id === currentSubject.fach_id ? { ...s, ...subjectFormData } : s
                 );
                 setSubjects(updatedSubjects);
                 setSuccessMessage('Fach erfolgreich aktualisiert');
-                
             } else {
-                // Neues Fach hinzufügen
                 const response = await fetch(`${API_URL}/faecher`, {
                     method: 'POST',
                     headers: {
@@ -127,14 +111,10 @@ const SubjectManagement = () => {
                     },
                     body: JSON.stringify(subjectFormData),
                 });
-                
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
                 const result = await response.json();
-                
-                // Füge das neue Fach zur lokalen Liste hinzu
                 const newSubject = {
                     fach_id: result.fach_id,
                     ...subjectFormData
@@ -142,28 +122,19 @@ const SubjectManagement = () => {
                 setSubjects([...subjects, newSubject]);
                 setSuccessMessage('Fach erfolgreich hinzugefügt');
             }
-            
             setShowSubjectForm(false);
-            
-            // Erfolgs-Nachricht nach 3 Sekunden ausblenden
             setTimeout(() => {
                 setSuccessMessage(null);
             }, 3000);
-            
         } catch (error) {
-            console.error('Fehler beim Speichern des Fachs:', error);
             setError(`Fehler beim Speichern: ${error.message}`);
-            
-            // Simuliere Erfolg für die Entwicklung
             if (currentSubject) {
-                // Aktualisiere die lokale Liste
                 const updatedSubjects = subjects.map(s => 
                     s.fach_id === currentSubject.fach_id ? { ...s, ...subjectFormData } : s
                 );
                 setSubjects(updatedSubjects);
                 setSuccessMessage('Fach erfolgreich aktualisiert (simuliert)');
             } else {
-                // Füge das neue Fach zur lokalen Liste hinzu
                 const newSubject = {
                     fach_id: Date.now(),
                     ...subjectFormData
@@ -171,10 +142,7 @@ const SubjectManagement = () => {
                 setSubjects([...subjects, newSubject]);
                 setSuccessMessage('Fach erfolgreich hinzugefügt (simuliert)');
             }
-            
             setShowSubjectForm(false);
-            
-            // Erfolgs-Nachricht nach 3 Sekunden ausblenden
             setTimeout(() => {
                 setSuccessMessage(null);
             }, 3000);
@@ -187,29 +155,18 @@ const SubjectManagement = () => {
                 const response = await fetch(`${API_URL}/faecher/${id}`, {
                     method: 'DELETE',
                 });
-                
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
-                // Aktualisiere die lokale Liste
                 setSubjects(subjects.filter(s => s.fach_id !== id));
                 setSuccessMessage('Fach erfolgreich gelöscht');
-                
-                // Erfolgs-Nachricht nach 3 Sekunden ausblenden
                 setTimeout(() => {
                     setSuccessMessage(null);
                 }, 3000);
-                
             } catch (error) {
-                console.error('Fehler beim Löschen des Fachs:', error);
                 setError(`Fehler beim Löschen: ${error.message}`);
-                
-                // Simuliere Erfolg für die Entwicklung
                 setSubjects(subjects.filter(s => s.fach_id !== id));
                 setSuccessMessage('Fach erfolgreich gelöscht (simuliert)');
-                
-                // Erfolgs-Nachricht nach 3 Sekunden ausblenden
                 setTimeout(() => {
                     setSuccessMessage(null);
                 }, 3000);
@@ -225,11 +182,9 @@ const SubjectManagement = () => {
                     + Neues Fach
                 </button>
             </div>
-            
             {loading && <div className="loading">Laden...</div>}
             {error && <div className="error-message">{error}</div>}
             {successMessage && <div className="success-message">{successMessage}</div>}
-            
             {!loading && (
                 <div className="subject-list">
                     <table className="subject-table">
@@ -271,7 +226,6 @@ const SubjectManagement = () => {
                     </table>
                 </div>
             )}
-            
             {showSubjectForm && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -288,7 +242,6 @@ const SubjectManagement = () => {
                                     required
                                 />
                             </div>
-                            
                             <div className="form-group">
                                 <label htmlFor="kurzname">Kürzel</label>
                                 <input
@@ -302,7 +255,6 @@ const SubjectManagement = () => {
                                 />
                                 <small>Max. 5 Zeichen</small>
                             </div>
-                            
                             <div className="form-group">
                                 <label htmlFor="farbe">Farbe</label>
                                 <div className="color-input-container">
@@ -325,7 +277,6 @@ const SubjectManagement = () => {
                                     />
                                 </div>
                             </div>
-                            
                             <div className="modal-buttons">
                                 <button 
                                     type="button" 

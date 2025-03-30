@@ -35,7 +35,7 @@ function TodoList() {
     document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
   };
 
-  // Get cookie value by name
+  // Get cookie 
   const getCookie = (name) => {
     const nameEQ = `${name}=`;
     const ca = document.cookie.split(';');
@@ -62,7 +62,6 @@ function TodoList() {
     }
   };
 
-  // Toggle task completion status
   const toggleComplete = (id) => {
     setTasks(
       tasks.map(task =>
@@ -71,16 +70,13 @@ function TodoList() {
     );
   };
 
-  // Delete a task
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id));
     if (tasks.length === 1) {
-      // If the last task is deleted, also delete the cookie
       document.cookie = "tasks=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
   };
 
-  // Clear all tasks
   const clearAllTasks = () => {
     if (window.confirm('Möchtest du wirklich alle Aufgaben löschen?')) {
       setTasks([]);
@@ -88,14 +84,12 @@ function TodoList() {
     }
   };
 
-  // Filter tasks based on current filter
   const filteredTasks = tasks.filter(task => {
     if (filter === 'active') return !task.completed;
     if (filter === 'completed') return task.completed;
     return true; // 'all'
   });
 
-  // Get counts for the filter tabs
   const counts = {
     all: tasks.length,
     active: tasks.filter(task => !task.completed).length,

@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react';
 import './styles/TeacherManagement.css';
 
 const TeacherManagement = () => {
-    // API-URL für Backend-Anfragen
+    // API-URL für backend rq
     const API_URL = 'http://localhost:3001/api';
 
-    // Zustand für Lehrer
+    // Zustand fuer Lehrer
     const [teachers, setTeachers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
 
-    // Form states for adding/editing teachers
     const [showTeacherForm, setShowTeacherForm] = useState(false);
     const [currentTeacher, setCurrentTeacher] = useState(null);
     const [teacherFormData, setTeacherFormData] = useState({
@@ -41,7 +40,7 @@ const TeacherManagement = () => {
             setError('Fehler beim Laden der Lehrer: ' + err.message);
             console.error('Fehler beim Laden der Lehrer:', err);
             
-            // Temporäre Dummy-Daten für die Entwicklung
+            // dummy Daten fuer die dev
             setTeachers([
                 { lehrer_id: 1, vorname: 'Uwe', nachname: 'Maulhardt', email: 'ita.fachleitung.fn@blindow.de', krzl: 'MAU', tel: '01735443980' },
                 { lehrer_id: 2, vorname: 'Lehrer', nachname: 'Nummer 2', email: 'lehrer2@blindow.de', krzl: 'L2', tel: '' },
@@ -52,7 +51,7 @@ const TeacherManagement = () => {
         }
     };
 
-    // Formular-Handler für Lehrer
+    // handler guer Lehrer
     const handleTeacherFormChange = (e) => {
         const { name, value } = e.target;
         setTeacherFormData({
@@ -90,7 +89,6 @@ const TeacherManagement = () => {
         
         try {
             if (currentTeacher) {
-                // Aktualisieren eines bestehenden Lehrers
                 const response = await fetch(`${API_URL}/lehrer/${currentTeacher.lehrer_id}`, {
                     method: 'PUT',
                     headers: {
@@ -103,7 +101,6 @@ const TeacherManagement = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                // Aktualisiere die lokale Liste
                 const updatedTeachers = teachers.map(t => 
                     t.lehrer_id === currentTeacher.lehrer_id ? { ...t, ...teacherFormData } : t
                 );
@@ -111,7 +108,6 @@ const TeacherManagement = () => {
                 setSuccessMessage('Lehrer erfolgreich aktualisiert');
                 
             } else {
-                // Neuen Lehrer hinzufügen
                 const response = await fetch(`${API_URL}/lehrer`, {
                     method: 'POST',
                     headers: {
@@ -126,7 +122,6 @@ const TeacherManagement = () => {
                 
                 const result = await response.json();
                 
-                // Füge den neuen Lehrer zur lokalen Liste hinzu
                 const newTeacher = {
                     lehrer_id: result.lehrer_id,
                     ...teacherFormData
@@ -137,7 +132,7 @@ const TeacherManagement = () => {
             
             setShowTeacherForm(false);
             
-            // Erfolgs-Nachricht nach 3 Sekunden ausblenden
+            // nach 3 Sekunden ausblenden sucess
             setTimeout(() => {
                 setSuccessMessage(null);
             }, 3000);
@@ -146,16 +141,13 @@ const TeacherManagement = () => {
             console.error('Fehler beim Speichern des Lehrers:', error);
             setError(`Fehler beim Speichern: ${error.message}`);
             
-            // Simuliere Erfolg für die Entwicklung
             if (currentTeacher) {
-                // Aktualisiere die lokale Liste
                 const updatedTeachers = teachers.map(t => 
                     t.lehrer_id === currentTeacher.lehrer_id ? { ...t, ...teacherFormData } : t
                 );
                 setTeachers(updatedTeachers);
                 setSuccessMessage('Lehrer erfolgreich aktualisiert (simuliert)');
             } else {
-                // Füge den neuen Lehrer zur lokalen Liste hinzu
                 const newTeacher = {
                     lehrer_id: Date.now(),
                     ...teacherFormData
@@ -166,7 +158,6 @@ const TeacherManagement = () => {
             
             setShowTeacherForm(false);
             
-            // Erfolgs-Nachricht nach 3 Sekunden ausblenden
             setTimeout(() => {
                 setSuccessMessage(null);
             }, 3000);
@@ -184,11 +175,9 @@ const TeacherManagement = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                // Aktualisiere die lokale Liste
                 setTeachers(teachers.filter(t => t.lehrer_id !== id));
                 setSuccessMessage('Lehrer erfolgreich gelöscht');
                 
-                // Erfolgs-Nachricht nach 3 Sekunden ausblenden
                 setTimeout(() => {
                     setSuccessMessage(null);
                 }, 3000);
@@ -197,11 +186,9 @@ const TeacherManagement = () => {
                 console.error('Fehler beim Löschen des Lehrers:', error);
                 setError(`Fehler beim Löschen: ${error.message}`);
                 
-                // Simuliere Erfolg für die Entwicklung
                 setTeachers(teachers.filter(t => t.lehrer_id !== id));
                 setSuccessMessage('Lehrer erfolgreich gelöscht (simuliert)');
                 
-                // Erfolgs-Nachricht nach 3 Sekunden ausblenden
                 setTimeout(() => {
                     setSuccessMessage(null);
                 }, 3000);

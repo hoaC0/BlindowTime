@@ -1,4 +1,3 @@
-// src/StundenplanAnzeige.jsx
 import React, { useState, useEffect } from 'react';
 import "./styles/tempSchedule.css";
 
@@ -21,16 +20,16 @@ const tempSchedule = () => {
     { id: 13, zeit: "19:15 - 20:00" }
   ]);
 
-  // Stundenplan-Daten
+  
   const [stundenplanDaten, setStundenplanDaten] = useState([]);
   const [laden, setLaden] = useState(false);
   const [fehler, setFehler] = useState(null);
   
-  // Aktueller Tag für Highlight-Funktion
+  // Aktueller Tag 
   const aktuellerTag = new Date().getDay(); // 0 = Sonntag, 1 = Montag, ...
   const aktuellerTagIndex = aktuellerTag === 0 || aktuellerTag === 6 ? -1 : aktuellerTag - 1;
   
-  // Klassenoptionen für Dropdown
+  //  Dropdown
   const [klassenOptionen, setKlassenOptionen] = useState([
     { id: '', name: 'Bitte wählen...' }
   ]);
@@ -38,16 +37,14 @@ const tempSchedule = () => {
   // API URL
   const API_URL = 'http://localhost:3001/api';
 
-  // Beim Laden der Komponente: Cookie lesen
   useEffect(() => {
-    // Cookie für gespeicherte Klasse lesen
+    // cookie für gespeicherte kl lesen
     const gespeicherteKlasse = getCookie('selectedClass');
     if (gespeicherteKlasse) {
       setAktuelleKlasse(gespeicherteKlasse);
     }
   }, []);
 
-  // Laden der Klassen für das Dropdown
   useEffect(() => {
     const fetchClasses = async () => {
       try {
@@ -65,7 +62,6 @@ const tempSchedule = () => {
           setKlassenOptionen(formattierteKlassen);
         } else {
           console.error('Fehler beim Laden der Klassen:', response.status);
-          // Fallback zu statischen Daten
           setKlassenOptionen([
             { id: '', name: 'Bitte wählen...' },
             { id: 'ITA25', name: 'ITA25' },
@@ -76,7 +72,6 @@ const tempSchedule = () => {
         }
       } catch (error) {
         console.error('Fehler beim Laden der Klassen:', error);
-        // Fallback zu statischen Daten
         setKlassenOptionen([
           { id: '', name: 'Bitte wählen...' },
           { id: 'ITA25', name: 'ITA25' },
@@ -89,8 +84,6 @@ const tempSchedule = () => {
     
     fetchClasses();
   }, [API_URL]);
-
-  // Laden des Stundenplans basierend auf der ausgewählten Klasse
   useEffect(() => {
     if (!aktuelleKlasse) {
       setStundenplanDaten([]);
@@ -124,7 +117,6 @@ const tempSchedule = () => {
     fetchSchedule();
   }, [aktuelleKlasse, API_URL]);
 
-  // Cookie-Funktionen
   const setCookie = (name, value, days) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
@@ -146,31 +138,25 @@ const tempSchedule = () => {
     const neueKlasse = e.target.value;
     setAktuelleKlasse(neueKlasse);
     
-    // Speichere Klassenauswahl in Cookie (für 30 Tage)
     if (neueKlasse) {
       setCookie('selectedClass', neueKlasse, 30);
     } else {
-      // Wenn keine Klasse ausgewählt ist, lösche das Cookie
       document.cookie = "selectedClass=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
   };
 
-  // Diese Funktion gibt die Unterrichtsdaten für eine bestimmte Stunde und einen Tag zurück
   const getUnterrichtFuerStundeUndTag = (stundenId, tagIndex) => {
     if (!stundenplanDaten || stundenplanDaten.length === 0) return null;
 
-    // Suche nach dem passenden Stundeneintrag
     const stunde = stundenplanDaten.find(eintrag => eintrag.stunde === stundenId);
     if (!stunde) return null;
 
-    // Tagespräfixe für die Datenfelder
     const tagPraefix = ['mo', 'di', 'mi', 'do', 'fr'][tagIndex];
     const fachId = stunde[`fach_${tagPraefix}`];
     
-    // Wenn kein Fach für diesen Tag/diese Stunde existiert
+    // wenn kein Fach  Tag/diese Stunde existiert
     if (!fachId) return null;
 
-    // Erstelle ein Unterrichtsobjekt mit allen relevanten Daten
     return {
       fachId,
       fachName: stunde[`fach_${tagPraefix}_name`],
@@ -203,7 +189,7 @@ const tempSchedule = () => {
             onChange={handleKlassenWechsel}
             className="class-select"
           >
-            {/* Nur ein einziger map-Aufruf */}
+            
             {klassenOptionen.map(option => (
               <option key={option.id} value={option.id}>
                 {option.name}
@@ -226,7 +212,6 @@ const tempSchedule = () => {
         </div>
       ) : (
         <div className="schedule-grid">
-          {/* Überschriften-Zeile */}
           <div className="schedule-cell header time-header">Zeit</div>
           {tage.map((tag, index) => (
             <div 
@@ -237,7 +222,7 @@ const tempSchedule = () => {
             </div>
           ))}
           
-          {/* Stundenzeilen */}
+          {/* stundenzeilen */}
           {zeiten.map((zeit) => (
             <React.Fragment key={zeit.id}>
               <div className="schedule-cell time-cell" title={zeit.zeit}>
