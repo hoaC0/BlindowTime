@@ -4,23 +4,23 @@ import './styles/drawer.css';
 const Drawer = ({ isOpen, toggleDrawer }) => {
   const drawerRef = useRef(null);
 
-  // check if outside
+  // check ob ausserhalb geklickt wurde
   const handleClickOutside = (event) => {
     if (drawerRef.current && !drawerRef.current.contains(event.target)) {
-      toggleDrawer(); // close drawer
+      toggleDrawer(); // drawer schliessen
     }
   };
 
   useEffect(() => {
     if (isOpen) {
-      // when open ( drawer )
+      // wenn offen
       document.addEventListener('mousedown', handleClickOutside);
     } else {
-      // stop when closed ( drawer )
+      // stoppen wenn zu
       document.removeEventListener('mousedown', handleClickOutside);
     }
 
-    // clean up
+    // aufraeum
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -47,8 +47,3 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
 };
 
 export default Drawer;
-
-
-
-
-

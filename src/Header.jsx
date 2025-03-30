@@ -6,8 +6,10 @@ import Drawer from './drawer';
 import Notification from './notification';
 
 const Header = () => {
+  // state fuer menu
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  // umschalten menu
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
@@ -33,4 +35,3 @@ const Header = () => {
 };
 
 export default Header;
-

@@ -1,3 +1,4 @@
+/* HEADER BEREICH STILE!!! */
 .header {
   display: flex;
   align-items: center;
@@ -6,6 +7,7 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
+/* linke seite */
 .header-left {
   display: flex;
   align-items: center;
@@ -22,6 +24,7 @@
   cursor: pointer;
 }
 
+/* button ohne hintergrund */
 .icon-button {
   background: none;
   border: none;
@@ -29,6 +32,7 @@
   padding: 0;
 }
 
+/* icon stile */
 .icon {
   color: #0f3c63;
   width: 1.75rem;
@@ -46,6 +50,7 @@
   transform: scale(1.2); /* consistent */
 }
   
+/* headerlink */
 .header-link {
   text-decoration: none;
   color: #0f3c63;

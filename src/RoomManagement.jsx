@@ -1,18 +1,17 @@
-// src/RoomManagement.jsx
 import React, { useState, useEffect } from 'react';
 import './styles/RoomManagement.css';
 
 const RoomManagement = () => {
-    // API-URL für Backend-Anfragen
+    // API URL
     const API_URL = 'http://localhost:3001/api';
 
-    // Zustand für Räume
+    // Zustand guer raeume
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
 
-    // Form states for adding/editing rooms
+    // Zustand guer das Formular
     const [showRoomForm, setShowRoomForm] = useState(false);
     const [currentRoom, setCurrentRoom] = useState(null);
     const [roomFormData, setRoomFormData] = useState({
@@ -20,7 +19,7 @@ const RoomManagement = () => {
         name: ''
     });
 
-    // Räume vom Backend laden
+    // raeume laden
     useEffect(() => {
         fetchRooms();
     }, []);
@@ -36,23 +35,23 @@ const RoomManagement = () => {
             setRooms(data);
             setError(null);
         } catch (err) {
-            setError('Fehler beim Laden der Räume: ' + err.message);
-            console.error('Fehler beim Laden der Räume:', err);
+            setError('fehler beim laden der raeume: ' + err.message);
+            console.error('fehler beim laden der raeume:', err);
             
-            // Temporäre Dummy-Daten für die Entwicklung
+            // dummy daten
             setRooms([
                 { raum_id: 1, nummer: '101', name: 'Klassenraum' },
                 { raum_id: 2, nummer: '102', name: 'Klassenraum' },
                 { raum_id: 3, nummer: '201', name: 'Labor' },
                 { raum_id: 4, nummer: '202', name: 'Seminarraum' },
-                { raum_id: 5, nummer: '301', name: 'Hörsaal' }
+                { raum_id: 5, nummer: '301', name: 'Hoersaal' }
             ]);
         } finally {
             setLoading(false);
         }
     };
 
-    // Formular-Handler für Räume
+    // formular für räume
     const handleRoomFormChange = (e) => {
         const { name, value } = e.target;
         setRoomFormData({
@@ -84,7 +83,7 @@ const RoomManagement = () => {
         
         try {
             if (currentRoom) {
-                // Aktualisieren eines bestehenden Raums
+                // aktualisieren
                 const response = await fetch(`${API_URL}/raeume/${currentRoom.raum_id}`, {
                     method: 'PUT',
                     headers: {
@@ -97,15 +96,15 @@ const RoomManagement = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                // Aktualisiere die lokale Liste
+                // lokale liste aktualisieren
                 const updatedRooms = rooms.map(r => 
                     r.raum_id === currentRoom.raum_id ? { ...r, ...roomFormData } : r
                 );
                 setRooms(updatedRooms);
-                setSuccessMessage('Raum erfolgreich aktualisiert');
+                setSuccessMessage('raum erfolgreich aktualisiert');
                 
             } else {
-                // Neuen Raum hinzufügen
+                // neu
                 const response = await fetch(`${API_URL}/raeume`, {
                     method: 'POST',
                     headers: {
@@ -120,47 +119,47 @@ const RoomManagement = () => {
                 
                 const result = await response.json();
                 
-                // Füge den neuen Raum zur lokalen Liste hinzu
+                // zur liste hinzufügen
                 const newRoom = {
                     raum_id: result.raum_id,
                     ...roomFormData
                 };
                 setRooms([...rooms, newRoom]);
-                setSuccessMessage('Raum erfolgreich hinzugefügt');
+                setSuccessMessage('raum erfolgreich hinzugefuegt');
             }
             
             setShowRoomForm(false);
             
-            // Erfolgs-Nachricht nach 3 Sekunden ausblenden
+            // nachricht ausblenden nach 3 sek
             setTimeout(() => {
                 setSuccessMessage(null);
             }, 3000);
             
         } catch (error) {
-            console.error('Fehler beim Speichern des Raums:', error);
-            setError(`Fehler beim Speichern: ${error.message}`);
+            console.error('fehler beim speichern des raums:', error);
+            setError(`fehler beim speichern: ${error.message}`);
             
-            // Simuliere Erfolg für die Entwicklung
+            // erfolg simulieren für entwicklung
             if (currentRoom) {
-                // Aktualisiere die lokale Liste
+                // liste aktualisieren
                 const updatedRooms = rooms.map(r => 
                     r.raum_id === currentRoom.raum_id ? { ...r, ...roomFormData } : r
                 );
                 setRooms(updatedRooms);
-                setSuccessMessage('Raum erfolgreich aktualisiert (simuliert)');
+                setSuccessMessage('raum erfolgreich aktualisiert (simuliert)');
             } else {
-                // Füge den neuen Raum zur lokalen Liste hinzu
+                // neuen raum hinzufuegen
                 const newRoom = {
                     raum_id: Date.now(),
                     ...roomFormData
                 };
                 setRooms([...rooms, newRoom]);
-                setSuccessMessage('Raum erfolgreich hinzugefügt (simuliert)');
+                setSuccessMessage('raum erfolgreich hinzugefügt (simuliert)');
             }
             
             setShowRoomForm(false);
             
-            // Erfolgs-Nachricht nach 3 Sekunden ausblenden
+            // nachricht ausblenden
             setTimeout(() => {
                 setSuccessMessage(null);
             }, 3000);
@@ -168,7 +167,7 @@ const RoomManagement = () => {
     };
 
     const handleDeleteRoom = async (id) => {
-        if (window.confirm('Möchtest du diesen Raum wirklich löschen?')) {
+        if (window.confirm('Moechtest du diesen Raum wirklich loeschen?')) {
             try {
                 const response = await fetch(`${API_URL}/raeume/${id}`, {
                     method: 'DELETE',
@@ -178,24 +177,23 @@ const RoomManagement = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                // Aktualisiere die lokale Liste
+                // liste aktualisieren
                 setRooms(rooms.filter(r => r.raum_id !== id));
-                setSuccessMessage('Raum erfolgreich gelöscht');
+                setSuccessMessage('raum erfolgreich geloescht');
                 
-                // Erfolgs-Nachricht nach 3 Sekunden ausblenden
+                // nachricht ausblenden
                 setTimeout(() => {
                     setSuccessMessage(null);
                 }, 3000);
                 
             } catch (error) {
-                console.error('Fehler beim Löschen des Raums:', error);
-                setError(`Fehler beim Löschen: ${error.message}`);
+                console.error('fehler beim loeschen des raums:', error);
+                setError(`fehler beim loeschen: ${error.message}`);
                 
-                // Simuliere Erfolg für die Entwicklung
+                // erfolg simulieren
                 setRooms(rooms.filter(r => r.raum_id !== id));
-                setSuccessMessage('Raum erfolgreich gelöscht (simuliert)');
+                setSuccessMessage('raum erfolgreich geloescht (simuliert)');
                 
-                // Erfolgs-Nachricht nach 3 Sekunden ausblenden
                 setTimeout(() => {
                     setSuccessMessage(null);
                 }, 3000);
@@ -242,7 +240,7 @@ const RoomManagement = () => {
                                             className="delete-button"
                                             onClick={() => handleDeleteRoom(room.raum_id)}
                                         >
-                                            Löschen
+                                            Loeschen
                                         </button>
                                     </td>
                                 </tr>

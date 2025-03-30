@@ -1,8 +1,8 @@
-// src/components/AdminNotificationPanel.jsx
 import React, { useState, useEffect } from 'react';
 import './styles/AdminNotificationPanel.css';
 
 const AdminNotificationPanel = () => {
+  // variablen fuer den state
   const [notificationMessage, setNotificationMessage] = useState('');
   const [sender, setSender] = useState('Sekretariat');
   const [isLoading, setIsLoading] = useState(false);
@@ -11,12 +11,11 @@ const AdminNotificationPanel = () => {
   const [notifications, setNotifications] = useState([]);
   const API_URL = 'http://localhost:3001/api';
 
-  // Lade Benachrichtigungen beim Laden der Komponente
+  // beim laden holen
   useEffect(() => {
     fetchNotifications();
   }, []);
 
-  // Lade Benachrichtigungen vom Server
   const fetchNotifications = async () => {
     setIsLoading(true);
     try {
@@ -26,31 +25,31 @@ const AdminNotificationPanel = () => {
         setNotifications(data);
         setError(null);
       } else {
-        console.error('Fehler beim Laden der Benachrichtigungen', response.status);
-        setError('Fehler beim Laden der Benachrichtigungen vom Server.');
+        console.error('fehler beim laden der benachrichtigungen', response.status);
+        setError('fehler beim laden der benachrichtigungen vom server.');
         
-        // Verwende Dummy-Daten für die Entwicklung
+        // demo daten laden
         setDemoNotifications();
       }
     } catch (err) {
-      console.error('Fehler beim Laden der Benachrichtigungen:', err);
-      setError('Fehler beim Laden der Benachrichtigungen. Server nicht erreichbar.');
+      console.error('fehler beim laden der benachrichtigungen:', err);
+      setError('fehler beim laden der benachrichtigungen. server nicht erreichbar.');
       
-      // Verwende Dummy-Daten für die Entwicklung
+      // verwende dummy-daten fuer die entwicklung
       setDemoNotifications();
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Setze Demo-Benachrichtigungen für die Entwicklung
+  // test benachrichtigungen setzen wenn der server nicht erreichbar is
   const setDemoNotifications = () => {
     const demoNotifications = [
       {
         notification_id: "1",
         title: "Sekretariat",
-        message: "Neuer Stundenplan für nächste Woche verfügbar",
-        time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // vor 2 Stunden
+        message: "Neuer Stundenplan fuer naechste Woche verfuegbar",
+        time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // vor 2 stunden
         formattedTime: "vor 2 Stunden",
         read: false,
         avatar: "S",
@@ -59,8 +58,8 @@ const AdminNotificationPanel = () => {
       {
         notification_id: "2",
         title: "Klassenlehrer",
-        message: "Elternabend am 15. März um 19:00 Uhr",
-        time: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // vor 5 Stunden
+        message: "Elternabend am 15. Maerz um 19:00 Uhr",
+        time: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // vor 5 stunden
         formattedTime: "vor 5 Stunden",
         read: false,
         avatar: "K",
@@ -69,8 +68,8 @@ const AdminNotificationPanel = () => {
       {
         notification_id: "3",
         title: "Schuldirektor",
-        message: "Schulausflug zum Technikmuseum am 20. März",
-        time: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // vor 1 Tag
+        message: "Schulausflug zum Technikmuseum am 20. Maerz",
+        time: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // vor 1 tag
         formattedTime: "vor 1 Tag",
         read: false,
         avatar: "D",
@@ -78,15 +77,15 @@ const AdminNotificationPanel = () => {
       }
     ];
     
+    console.log("demo-benachrichtigungen gesetzt:", demoNotifications);
     setNotifications(demoNotifications);
   };
 
-  // Sende eine neue Benachrichtigung
   const handleSendNotification = async (e) => {
     e.preventDefault();
     
     if (notificationMessage.trim() === '') {
-      setError('Bitte gib eine Nachricht ein.');
+      setError('bitte gib eine nachricht ein.');
       return;
     }
     
@@ -111,20 +110,20 @@ const AdminNotificationPanel = () => {
       
       if (response.ok) {
         const result = await response.json();
-        setSuccess(`Nachricht wurde erfolgreich gesendet!`);
+        setSuccess(`nachricht wurde erfolgreich gesendet!`);
         setNotificationMessage('');
         
-        // Benachrichtigungsliste aktualisieren
+        // liste aktualisieren
         fetchNotifications();
       } else {
-        console.error('Fehler beim Senden der Benachrichtigung:', response.status);
-        setError('Fehler beim Senden der Benachrichtigung. Bitte versuche es später erneut.');
+        console.error('fehler beim senden der benachrichtigung:', response.status);
+        setError('fehler beim senden der benachrichtigung. bitte versuche es spaeter erneut.');
         
-        // Simuliere Erfolg für die Entwicklung
-        setSuccess(`Nachricht "${sender}: ${notificationMessage}" wurde gesendet! (simuliert)`);
+        // simuliere erfolg fuer die entwicklung
+        setSuccess(`nachricht "${sender}: ${notificationMessage}" wurde gesendet! (simuliert)`);
         setNotificationMessage('');
         
-        // Lokale Liste mit neuer Benachrichtigung aktualisieren
+        // lokale liste mit neuer benachrichtigung aktualisieren
         const mockNotification = {
           notification_id: Date.now().toString(),
           title: sender,
@@ -139,14 +138,14 @@ const AdminNotificationPanel = () => {
         setNotifications([mockNotification, ...notifications]);
       }
     } catch (error) {
-      console.error('Fehler beim Senden der Benachrichtigung:', error);
-      setError('Fehler beim Senden der Benachrichtigung. Server nicht erreichbar.');
+      console.error('fehler beim senden der benachrichtigung:', error);
+      setError('fehler beim senden der benachrichtigung. server nicht erreichbar.');
       
-      // Simuliere Erfolg für die Entwicklung
-      setSuccess(`Nachricht "${sender}: ${notificationMessage}" wurde gesendet! (simuliert)`);
+      // simuliere erfolg fuer die entwicklung
+      setSuccess(`nachricht "${sender}: ${notificationMessage}" wurde gesendet! (simuliert)`);
       setNotificationMessage('');
       
-      // Lokale Liste mit neuer Benachrichtigung aktualisieren
+      // lokale liste mit neuer benachrichtigung aktualisieren
       const mockNotification = {
         notification_id: Date.now().toString(),
         title: sender,
@@ -164,9 +163,9 @@ const AdminNotificationPanel = () => {
     }
   };
 
-  // Lösche eine Benachrichtigung
+  // loescht eine benachrichtigung
   const handleDeleteNotification = async (id) => {
-    if (window.confirm('Möchtest du diese Benachrichtigung wirklich löschen?')) {
+    if (window.confirm('moechtest du diese benachrichtigung wirklich loeschen?')) {
       setIsLoading(true);
       
       try {
@@ -175,21 +174,21 @@ const AdminNotificationPanel = () => {
         });
         
         if (response.ok) {
-          // Entferne die Benachrichtigung aus der lokalen Liste
+          // entferne die benachrichtigung aus der lokalen liste
           setNotifications(notifications.filter(notification => notification.notification_id !== id));
-          setSuccess('Benachrichtigung wurde erfolgreich gelöscht.');
+          setSuccess('benachrichtigung wurde erfolgreich geloescht.');
         } else {
-          console.error('Fehler beim Löschen der Benachrichtigung:', response.status);
-          setError('Fehler beim Löschen der Benachrichtigung. Bitte versuche es später erneut.');
+          console.error('fehler beim loeschen der benachrichtigung:', response.status);
+          setError('fehler beim loeschen der benachrichtigung. bitte versuche es spaeter erneut.');
           
-          // Simuliere Erfolg für die Entwicklung
+          // simuliere erfolg fuer die entwicklung
           setNotifications(notifications.filter(notification => notification.notification_id !== id));
         }
       } catch (error) {
-        console.error('Fehler beim Löschen der Benachrichtigung:', error);
-        setError('Fehler beim Löschen der Benachrichtigung. Server nicht erreichbar.');
+        console.error('fehler beim loeschen der benachrichtigung:', error);
+        setError('fehler beim loeschen der benachrichtigung. server nicht erreichbar.');
         
-        // Simuliere Erfolg für die Entwicklung
+        // simuliere erfolg fuer die entwicklung
         setNotifications(notifications.filter(notification => notification.notification_id !== id));
       } finally {
         setIsLoading(false);
@@ -272,7 +271,7 @@ const AdminNotificationPanel = () => {
                   onClick={() => handleDeleteNotification(notification.notification_id)}
                   disabled={isLoading}
                 >
-                  Löschen
+                  Loeschen
                 </button>
               </div>
             ))}

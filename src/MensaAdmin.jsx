@@ -1,20 +1,19 @@
-// src/MensaAdmin.jsx - Verwaltungskomponente für den Mensaspeiseplan
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import Header from "./Header.jsx";
 import './styles/MensaAdmin.css';
 
 const MensaAdmin = () => {
-  // API-URL für Backend-Anfragen
+  // api-url
   const API_URL = 'http://localhost:3001/api';
 
-  // State für die aktive Woche
+  // state
   const [activeWeek, setActiveWeek] = useState(getCurrentWeek());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   
-  // State für die Menüdaten
+  // menuedaten
   const [menuData, setMenuData] = useState([
     { tag: "Montag", datum: "", hauptgericht: "", vegetarisch: "", beilage: "", nachtisch: "", preis: "4,20 €" },
     { tag: "Dienstag", datum: "", hauptgericht: "", vegetarisch: "", beilage: "", nachtisch: "", preis: "4,20 €" },
@@ -23,7 +22,7 @@ const MensaAdmin = () => {
     { tag: "Freitag", datum: "", hauptgericht: "", vegetarisch: "", beilage: "", nachtisch: "", preis: "4,20 €" }
   ]);
 
-  // State für den bearbeiteten Tag
+  // tag bearbeiten
   const [editDay, setEditDay] = useState(null);
   const [dayFormData, setDayFormData] = useState({
     tag: "",
@@ -35,49 +34,49 @@ const MensaAdmin = () => {
     preis: "4,20 €"
   });
 
-  // Funktion zum Berechnen der aktuellen Kalenderwoche
+  // woche berechnen
   function getCurrentWeek() {
     const now = new Date();
     const onejan = new Date(now.getFullYear(), 0, 1);
     return Math.ceil((((now.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
   }
 
-  // Berechnet das Datum für einen bestimmten Tag der ausgewählten Woche
+  // berechnet datum
   const getDateForWeekday = (weekday, weekNumber) => {
     const weekdays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"];
     const weekdayIndex = weekdays.indexOf(weekday);
     
     if (weekdayIndex === -1) return "";
     
-    // Aktuelles Datum ermitteln
+    // aktuelles datum
     const now = new Date();
     const year = now.getFullYear();
     
-    // Montag der aktuellen Woche ermitteln
+    // montag dieser woche bestimmen
     const currentDate = new Date();
-    const currentDay = currentDate.getDay(); // 0 = Sonntag, 1 = Montag, ...
+    const currentDay = currentDate.getDay(); // 0 = sonntag, 1 = montag, ...
     const diff = currentDate.getDate() - currentDay + (currentDay === 0 ? -6 : 1); 
     const mondayOfCurrentWeek = new Date(currentDate.setDate(diff));
     
-    // Aktuelle Kalenderwoche ermitteln
+    // aktuelle KW
     const currentWeek = getCurrentWeek();
     
-    // Berechnen wie viele Wochen vor oder nach der aktuellen Woche
+    // wochen differenz berechnen
     const weekDiff = weekNumber - currentWeek;
     
-    // Montag der gewünschten Woche ermitteln
+    // montag der gewuenschten woche
     const targetMonday = new Date(mondayOfCurrentWeek);
     targetMonday.setDate(mondayOfCurrentWeek.getDate() + (weekDiff * 7));
     
-    // Gewünschten Wochentag in der Zielwoche ermitteln
+    // wochentag in zielwoche
     const targetDate = new Date(targetMonday);
     targetDate.setDate(targetMonday.getDate() + weekdayIndex);
     
-    // Formatieren zu DD.MM.YYYY
+    // als DD.MM.YYYY
     return `${targetDate.getDate().toString().padStart(2, '0')}.${(targetDate.getMonth() + 1).toString().padStart(2, '0')}.${targetDate.getFullYear()}`;
   };
 
-  // Menü-Daten für eine bestimmte Woche laden
+  // menue fuer woche laden
   useEffect(() => {
     fetchMenuForWeek(activeWeek);
   }, [activeWeek]);
@@ -92,8 +91,8 @@ const MensaAdmin = () => {
         setMenuData(data);
         setError(null);
       } else {
-        console.error('Fehler beim Laden des Mensaplans:', response.status);
-        // Generiere Standarddaten mit korrektem Datum für diese Woche
+        console.error('fehler beim laden des mensaplans:', response.status);
+        // default daten
         const defaultData = [
           { tag: "Montag", datum: getDateForWeekday("Montag", weekNumber), hauptgericht: "", vegetarisch: "", beilage: "", nachtisch: "", preis: "4,20 €" },
           { tag: "Dienstag", datum: getDateForWeekday("Dienstag", weekNumber), hauptgericht: "", vegetarisch: "", beilage: "", nachtisch: "", preis: "4,20 €" },
@@ -104,10 +103,10 @@ const MensaAdmin = () => {
         setMenuData(defaultData);
       }
     } catch (error) {
-      console.error('Fehler beim Laden des Mensaplans:', error);
-      setError('Der Mensaplan konnte nicht geladen werden. Wir zeigen dir Standarddaten.');
+      console.error('fehler beim laden des mensaplans:', error);
+      setError('der mensaplan konnte nicht geladen werden. wir zeigen dir standarddaten.');
       
-      // Generiere Standarddaten mit korrektem Datum für diese Woche
+      // standard mit korrekten daten
       const defaultData = [
         { tag: "Montag", datum: getDateForWeekday("Montag", weekNumber), hauptgericht: "", vegetarisch: "", beilage: "", nachtisch: "", preis: "4,20 €" },
         { tag: "Dienstag", datum: getDateForWeekday("Dienstag", weekNumber), hauptgericht: "", vegetarisch: "", beilage: "", nachtisch: "", preis: "4,20 €" },
@@ -121,7 +120,7 @@ const MensaAdmin = () => {
     }
   };
 
-  // Woche wechseln
+  // woche aendern
   const previousWeek = () => {
     setActiveWeek(activeWeek - 1);
   };
@@ -130,7 +129,7 @@ const MensaAdmin = () => {
     setActiveWeek(activeWeek + 1);
   };
 
-  // Tagesmenü bearbeiten
+  // tag bearbeiten
   const handleEditDay = (dayData) => {
     setEditDay(dayData.tag);
     setDayFormData({
@@ -144,7 +143,7 @@ const MensaAdmin = () => {
     });
   };
 
-  // Formular-Änderungen verarbeiten
+  // form aenderung
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setDayFormData({
@@ -153,19 +152,19 @@ const MensaAdmin = () => {
     });
   };
 
-  // Formular absenden
+  // form senden
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     
     try {
-      // Die aktualisierten Daten für diesen Tag
+      // aktuelle tagesdaten
       const updatedDayData = {
         ...dayFormData,
         woche: activeWeek
       };
       
-      // API-Aufruf zum Speichern des Tagesmenüs
+      // api-aufruf zum speichern
       const response = await fetch(`${API_URL}/mensa/speiseplan/${activeWeek}/${dayFormData.tag}`, {
         method: 'PUT',
         headers: {
@@ -175,42 +174,42 @@ const MensaAdmin = () => {
       });
       
       if (response.ok) {
-        // Erfolgreiche Aktualisierung
-        setSuccessMessage(`Speiseplan für ${dayFormData.tag} wurde erfolgreich aktualisiert.`);
+        // erfolg
+        setSuccessMessage(`speiseplan fuer ${dayFormData.tag} wurde erfolgreich aktualisiert.`);
         
-        // Lokale Menüdaten aktualisieren
+        // lokale daten aktualisieren
         const updatedMenuData = menuData.map(day => 
           day.tag === dayFormData.tag ? { ...day, ...dayFormData } : day
         );
         setMenuData(updatedMenuData);
         
-        // Bearbeitungsmodus beenden
+        // bearbeitungsmodus ende
         setEditDay(null);
         
-        // Erfolgsmeldung nach 3 Sekunden ausblenden
+        // erfolgs nachricht ausblenden
         setTimeout(() => {
           setSuccessMessage(null);
         }, 3000);
       } else {
-        throw new Error('Fehler beim Speichern des Speiseplans');
+        throw new Error('fehler beim speichern des speiseplans');
       }
     } catch (error) {
-      console.error('Fehler beim Speichern des Speiseplans:', error);
-      setError(`Fehler beim Speichern: ${error.message}`);
+      console.error('fehler beim speichern des speiseplans:', error);
+      setError(`fehler beim speichern: ${error.message}`);
       
-      // Simuliere Erfolg für die Entwicklung
-      setSuccessMessage(`Speiseplan für ${dayFormData.tag} wurde erfolgreich aktualisiert (simuliert).`);
+      // erfolg simulieren
+      setSuccessMessage(`speiseplan fuer ${dayFormData.tag} wurde erfolgreich aktualisiert (simuliert).`);
       
-      // Lokale Menüdaten aktualisieren
+      // lokale daten aktualisieren
       const updatedMenuData = menuData.map(day => 
         day.tag === dayFormData.tag ? { ...day, ...dayFormData } : day
       );
       setMenuData(updatedMenuData);
       
-      // Bearbeitungsmodus beenden
+      // bearbeitungsmodus ende
       setEditDay(null);
       
-      // Erfolgsmeldung nach 3 Sekunden ausblenden
+      // erfolgs nachricht ausblenden
       setTimeout(() => {
         setSuccessMessage(null);
       }, 3000);
@@ -219,13 +218,13 @@ const MensaAdmin = () => {
     }
   };
 
-  // Gesamten Wochenplan veröffentlichen
+  // wochenplan veroeffentlichen
   const publishWeeklyMenu = async () => {
-    if (window.confirm('Möchten Sie den gesamten Wochenplan veröffentlichen?')) {
+    if (window.confirm('moechten sie den gesamten wochenplan veroeffentlichen?')) {
       setLoading(true);
       
       try {
-        // API-Aufruf zum Veröffentlichen des Wochenplans
+        // api-aufruf
         const response = await fetch(`${API_URL}/mensa/wochenplan/${activeWeek}/publish`, {
           method: 'POST',
           headers: {
@@ -235,23 +234,23 @@ const MensaAdmin = () => {
         });
         
         if (response.ok) {
-          setSuccessMessage('Der Wochenplan wurde erfolgreich veröffentlicht.');
+          setSuccessMessage('der wochenplan wurde erfolgreich veroeffentlicht.');
           
-          // Erfolgsmeldung nach 3 Sekunden ausblenden
+          // meldung ausblenden
           setTimeout(() => {
             setSuccessMessage(null);
           }, 3000);
         } else {
-          throw new Error('Fehler beim Veröffentlichen des Wochenplans');
+          throw new Error('fehler beim veroeffentlichen des wochenplans');
         }
       } catch (error) {
-        console.error('Fehler beim Veröffentlichen des Wochenplans:', error);
-        setError(`Fehler beim Veröffentlichen: ${error.message}`);
+        console.error('fehler beim veroeffentlichen des wochenplans:', error);
+        setError(`fehler beim veroeffentlichen: ${error.message}`);
         
-        // Simuliere Erfolg für die Entwicklung
-        setSuccessMessage('Der Wochenplan wurde erfolgreich veröffentlicht (simuliert).');
+        // erfolg simulieren
+        setSuccessMessage('der wochenplan wurde erfolgreich veroeffentlicht (simuliert).');
         
-        // Erfolgsmeldung nach 3 Sekunden ausblenden
+        // meldung ausblenden
         setTimeout(() => {
           setSuccessMessage(null);
         }, 3000);
@@ -275,11 +274,11 @@ const MensaAdmin = () => {
           onClick={publishWeeklyMenu}
           disabled={loading}
         >
-          Wochenplan veröffentlichen
+          Wochenplan veroeffentlichen
         </button>
       </div>
 
-      {loading && <div className="loading-indicator">Daten werden geladen...</div>}
+      {loading && <div className="loading-indicator">daten werden geladen...</div>}
       {error && <div className="error-message">{error}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
 
@@ -415,7 +414,7 @@ const MensaAdmin = () => {
   );
 };
 
-// Komponente rendern
+// komponente rendern
 const renderMensaAdmin = () => {
   createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -425,7 +424,7 @@ const renderMensaAdmin = () => {
   );
 };
 
-// Wenn dieses Skript direkt ausgeführt wird, rendere die Komponente
+// wenn dieses skript direkt ausgefuehrt wird
 if (document.getElementById('root')) {
   renderMensaAdmin();
 }

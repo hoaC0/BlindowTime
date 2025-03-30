@@ -6,16 +6,16 @@ const MensaElement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // API-URL für Mensa-Daten
+  // api url
   const API_URL = 'http://localhost:3001/api';
 
-  // Aktuellen Wochentag ermitteln
+  // tag heute
   const getAktuellerWochentag = () => {
     const weekdays = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
     return weekdays[new Date().getDay()];
   };
 
-  // Dummy-Daten für die Entwicklung
+  // dummy daten
   const dummyData = {
     tag: getAktuellerWochentag(),
     datum: new Date().toLocaleDateString('de-DE'),
@@ -26,7 +26,7 @@ const MensaElement = () => {
     preis: "4,20 €"
   };
 
-  // Heutiges Mensa-Angebot laden
+  // mensa holen
   useEffect(() => {
     const fetchHeutigesMenue = async () => {
       setLoading(true);
@@ -38,13 +38,13 @@ const MensaElement = () => {
           setHeutigesMenue(data);
           setError(null);
         } else {
-          console.error('Fehler beim Laden des Mensa-Menüs:', response.status);
-          // Im Fehlerfall Dummy-Daten verwenden
+          console.error('fehler beim laden des mensa-menuees:', response.status);
+          // dummydaten
           setHeutigesMenue(dummyData);
         }
       } catch (error) {
-        console.error('Fehler beim Laden des Mensa-Menüs:', error);
-        // Bei Netzwerkfehlern auch Dummy-Daten verwenden
+        console.error('fehler beim laden des mensa-menuees:', error);
+        // dummydaten
         setHeutigesMenue(dummyData);
       } finally {
         setLoading(false);
@@ -54,10 +54,10 @@ const MensaElement = () => {
     fetchHeutigesMenue();
   }, []);
 
-  // Wenn heute kein Mensa-Angebot existiert oder Wochenende ist
+  // wochenende?
   const isWochenende = () => {
     const today = new Date().getDay();
-    return today === 0 || today === 6; // 0 = Sonntag, 6 = Samstag
+    return today === 0 || today === 6; // 0 = sonntag, 6 = samstag
   };
 
   return (
@@ -78,7 +78,7 @@ const MensaElement = () => {
         ) : isWochenende() ? (
           <div className="mensa-weekend">
             <p>Die Mensa hat am Wochenende geschlossen.</p>
-            <a href="mensa.html" className="mensa-link">Menüplan für nächste Woche ansehen</a>
+            <a href="mensa.html" className="mensa-link">Menuplan fuer naechste Woche ansehen</a>
           </div>
         ) : heutigesMenue ? (
           <div className="todays-menu">
@@ -116,8 +116,8 @@ const MensaElement = () => {
           </div>
         ) : (
           <div className="mensa-no-menu">
-            <p>Für heute steht kein Menü zur Verfügung.</p>
-            <a href="mensa.html" className="mensa-link">Menüplan für die Woche ansehen</a>
+            <p>Fuer heute steht kein Menue zur Verfuegung.</p>
+            <a href="mensa.html" className="mensa-link">Menuplan fuer die Woche ansehen</a>
           </div>
         )}
       </div>

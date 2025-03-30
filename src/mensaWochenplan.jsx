@@ -7,53 +7,52 @@ const MensaWochenplan = () => {
   const [error, setError] = useState(null);
   const [aktiveWoche, setAktiveWoche] = useState(getInitialWeek());
   
-  // API-URL für Mensa-Daten
+  // api url
   const API_URL = 'http://localhost:3001/api';
   
-  // Funktion zum Ermitteln der initialen Woche
-  // Werktags: aktuelle Woche, Wochenende: nächste Woche
+  // erstmal startwochen 
   function getInitialWeek() {
     const today = new Date();
-    const dayOfWeek = today.getDay(); // 0 = Sonntag, 1 = Montag, ...
+    const dayOfWeek = today.getDay(); // 0 = so, 1 = mo, ...
     
-    // Am Wochenende (Samstag = 6, Sonntag = 0) zeigen wir die nächste Woche an
+    // am wochenende zeig naechste woche
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     
-    // Aktuelle Woche des Datums herausfinden
-    // Montag der aktuellen Woche ermitteln
+    // aktuelle woche des datums
+    // montag der aktuellen woche ermitteln
     const currentDate = new Date(today);
     const diff = currentDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
     currentDate.setDate(diff);
     
-    // Aktuelle Kalenderwoche aus dem berechneten Montag bestimmen
+    // kalenderwoche aus dem berechneten montag bestimmen
     const currentWeek = getWeekNumber(currentDate);
     
-    // Wenn Wochenende, dann nächste Woche anzeigen, sonst aktuelle
+    // wenn wochenende, dann naechste woche anzeigen, sonst aktuelle
     return isWeekend ? currentWeek + 1 : currentWeek;
   }
 
-  // Funktion zur Berechnung der Kalenderwoche nach ISO 8601
+  // kalenderwochen nach iso 8601
   function getWeekNumber(d) {
-    // Kopie des Datums, um es nicht zu ändern
+    // kopie des datums, um es nicht zu aendern
     const date = new Date(d.getTime());
     
-    // Auf den nächsten Donnerstag setzen
+    // auf den naechsten donnerstag setzen
     date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
     
-    // Erster Donnerstag im Jahr
+    // erster donnerstag im jahr
     const firstThursday = new Date(date.getFullYear(), 0, 4);
     firstThursday.setDate(firstThursday.getDate() + 3 - (firstThursday.getDay() + 6) % 7);
     
-    // Woche berechnen
+    // woche berechnen
     const weekNumber = 1 + Math.floor((date - firstThursday) / (7 * 24 * 60 * 60 * 1000));
     
     return weekNumber;
   }
   
-  // Prüfen, ob es der aktuelle Tag ist
+  // ist heute?
   const isCurrentDay = (tag) => {
-    const heute = new Date().getDay(); // 0 = Sonntag, 1 = Montag, ...
-    return heute === getWochentagIndex(tag) + 1; // +1, weil getWochentagIndex bei 0 für Montag beginnt
+    const heute = new Date().getDay(); // 0 = so, 1 = mo, ...
+    return heute === getWochentagIndex(tag) + 1; // +1, weil getWochentagIndex bei 0 für mo beginnt
   };
 
   const getWochentagIndex = (tag) => {
@@ -61,7 +60,7 @@ const MensaWochenplan = () => {
     return wochentage.indexOf(tag);
   };
 
-  // Dummy-Daten für die Entwicklung
+  // testdaten
   const dummyData = [
     {
       tag: "Montag",
@@ -76,18 +75,18 @@ const MensaWochenplan = () => {
       tag: "Dienstag",
       datum: "19.03.2025",
       hauptgericht: "Schnitzel mit Pommes",
-      vegetarisch: "Gemüseschnitzel mit Pommes",
-      beilage: "Erbsen und Möhren",
+      vegetarisch: "Gemueseschnitzel mit Pommes",
+      beilage: "Erbsen und Moehren",
       nachtisch: "Obstsalat",
       preis: "4,50 €"
     },
     {
       tag: "Mittwoch",
       datum: "20.03.2025",
-      hauptgericht: "Hähnchencurry mit Reis",
-      vegetarisch: "Gemüsecurry mit Reis",
+      hauptgericht: "Haehnchencurry mit Reis",
+      vegetarisch: "Gemuesecurry mit Reis",
       beilage: "Mango-Chutney",
-      nachtisch: "Joghurt mit Früchten",
+      nachtisch: "Joghurt mit Fruechten",
       preis: "4,30 €"
     },
     {
@@ -103,14 +102,14 @@ const MensaWochenplan = () => {
       tag: "Freitag",
       datum: "22.03.2025",
       hauptgericht: "Fischfilet",
-      vegetarisch: "Grillkäse",
+      vegetarisch: "Grillkaese",
       beilage: "Kartoffelpüree, Gurkensalat",
       nachtisch: "Berliner",
       preis: "4,10 €"
     }
   ];
 
-  // Menüplan vom Backend laden
+  // mensa vom server holen
   useEffect(() => {
     const fetchMensaplan = async () => {
       setLoading(true);
@@ -122,14 +121,14 @@ const MensaWochenplan = () => {
           setWochenplan(data);
           setError(null);
         } else {
-          console.error('Fehler beim Laden des Mensaplans:', response.status);
-          // Im Fehlerfall Dummy-Daten verwenden
+          console.error('fehler beim laden des mensaplans:', response.status);
+          // im fehlerfall dummy testdaten verwenden
           setWochenplan(dummyData);
         }
       } catch (error) {
-        console.error('Fehler beim Laden des Mensaplans:', error);
-        setError('Der Mensaplan konnte nicht geladen werden. Wir zeigen dir Beispieldaten.');
-        // Bei Netzwerkfehlern auch Dummy-Daten verwenden
+        console.error('fehler beim laden des mensaplans:', error);
+        setError('der mensaplan konnte nicht geladen werden. wir zeigen dir beispieldaten.');
+        // bei netzwerkfehlern auch dummy testdaten verwenden
         setWochenplan(dummyData);
       } finally {
         setLoading(false);
@@ -139,7 +138,7 @@ const MensaWochenplan = () => {
     fetchMensaplan();
   }, [aktiveWoche]);
 
-  // Woche wechseln
+  // woche wechseln
   const vorherigeWoche = () => {
     setAktiveWoche(aktiveWoche - 1);
   };
@@ -201,8 +200,8 @@ const MensaWochenplan = () => {
       )}
       
       <div className="mensa-info">
-        <p><strong>Öffnungszeiten:</strong> Montag bis Freitag, 11:30 - 14:00 Uhr</p>
-        <p><strong>Hinweis:</strong> Alle Preise gelten für Schüler und Studierende mit Ausweis. Allergene und Zusatzstoffe sind in der Mensa ausgeschildert.</p>
+        <p><strong>Oeffnungszeiten:</strong> Montag bis Freitag, 11:30 - 14:00 Uhr</p>
+        <p><strong>Hinweis:</strong> Alle Preise gelten fuer Schueler und Studierende mit Ausweis. Allergene und Zusatzstoffe sind in der Mensa ausgeschildert.</p>
       </div>
     </div>
   );

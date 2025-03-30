@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './styles/classEditor.css';
 
 const ClassEditor = () => {
-  // State für Klassendaten
+  // state fuer klassendaten
   const [className, setClassName] = useState('');
   const [days] = useState(["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]);
   const [times] = useState([
@@ -21,19 +21,19 @@ const ClassEditor = () => {
     "19:15 - 20:00",
   ]);
 
-  // Dropdown-Optionen
+  // dropdown optionen
   const [subjectOptions, setSubjectOptions] = useState([]);
   const [teacherOptions, setTeacherOptions] = useState([]);
   const [roomOptions, setRoomOptions] = useState([]);
   const [klassenOptions, setKlassenOptions] = useState([]); 
   
-  // API-URL für Backend-Anfragen
+  // api-url fuer backend-anfragen
   const API_URL = 'http://localhost:3001/api';
   
-  // State für Stundenplan
+  // state fuer stundenplan
   const [schedule, setSchedule] = useState(Array(times.length).fill().map(() => Array(days.length).fill(null)));
   
-  // State für das Modal
+  // modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCell, setSelectedCell] = useState({ timeIndex: -1, dayIndex: -1 });
   const [formData, setFormData] = useState({
@@ -42,26 +42,26 @@ const ClassEditor = () => {
     room: ''
   });
   
-  // State für Status und Meldungen
+  // status und meldungen
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [selectedKlasse, setSelectedKlasse] = useState(''); 
 
-  // Beim ersten Laden Klassen und Optionen abrufen
+  // beim ersten laden klassen und optionen abrufen
   useEffect(() => {
     loadKlassen();
     loadDropdownOptions();
   }, []);
 
-  // Wenn eine Klasse ausgewählt wird
+  // wenn eine klasse ausgewaehlt wird
   useEffect(() => {
     if (selectedKlasse) {
       loadClassData(selectedKlasse);
     }
   }, [selectedKlasse]);
 
-  // Klassen vom Backend laden
+  // klassen vom backend laden
   const loadKlassen = async () => {
     try {
       const response = await fetch(`${API_URL}/stundenplan-management/klassen`);
@@ -69,20 +69,20 @@ const ClassEditor = () => {
         const data = await response.json();
         setKlassenOptions(data);
       } else {
-        console.error('Fehler beim Laden der Klassen:', response.status);
+        console.error('fehler beim laden der klassen:', response.status);
       }
     } catch (error) {
-      console.error('Fehler beim Laden der Klassen:', error);
+      console.error('fehler beim laden der klassen:', error);
     }
   };
 
-  // Dropdown-Optionen vom Backend laden
+  // dropdown optionen
   const loadDropdownOptions = async () => {
     setLoading(true);
     setError(null);
     
     try {
-      // Fächer laden
+      // faecher laden
       const subjectsResponse = await fetch(`${API_URL}/stundenplan-management/faecher`);
       if (subjectsResponse.ok) {
         const subjectsData = await subjectsResponse.json();
@@ -91,10 +91,10 @@ const ClassEditor = () => {
           label: `${subject.name} (${subject.kurzname})`
         })));
       } else {
-        console.error('Fehler beim Laden der Fächer:', subjectsResponse.status);
+        console.error('fehler beim laden der faecher:', subjectsResponse.status);
       }
       
-      // Lehrer laden
+      // lehrer laden
       const teachersResponse = await fetch(`${API_URL}/stundenplan-management/lehrer`);
       if (teachersResponse.ok) {
         const teachersData = await teachersResponse.json();
@@ -103,10 +103,10 @@ const ClassEditor = () => {
           label: `${teacher.vorname || ''} ${teacher.nachname || ''} ${teacher.krzl ? `(${teacher.krzl})` : ''}`
         })));
       } else {
-        console.error('Fehler beim Laden der Lehrer:', teachersResponse.status);
+        console.error('fehler beim laden der lehrer:', teachersResponse.status);
       }
       
-      // Räume laden
+      // raeume laden
       const roomsResponse = await fetch(`${API_URL}/stundenplan-management/raeume`);
       if (roomsResponse.ok) {
         const roomsData = await roomsResponse.json();
@@ -115,30 +115,30 @@ const ClassEditor = () => {
           label: `${room.nummer} ${room.name ? `(${room.name})` : ''}`
         })));
       } else {
-        console.error('Fehler beim Laden der Räume:', roomsResponse.status);
+        console.error('fehler beim laden der raeume:', roomsResponse.status);
       }
     } catch (err) {
-      console.error('Fehler beim Laden der Dropdown-Optionen:', err);
-      setError('Fehler beim Laden der Dropdown-Optionen.');
+      console.error('fehler beim laden der dropdown-optionen:', err);
+      setError('fehler beim laden der dropdown-optionen.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Klassendaten vom Backend laden
+  // klassendaten vom backend laden
   const loadClassData = async (id) => {
     setLoading(true);
     setError(null);
     
     try {
-      // Wichtig: Wir vergleichen Strings, nicht Zahlen
+      // wichtig: wir vergleichen strings nicht zahlen
       const selectedKlasseObj = klassenOptions.find(k => String(k.klassen_id) === String(id));
       
       if (selectedKlasseObj) {
         const klassenName = selectedKlasseObj.name;
         setClassName(`${klassenName} - ${getFullClassName(klassenName)}`);
         
-        // Stundenplan vom Backend laden - hier ist der Klassenname wichtig, nicht die ID
+        // stundenplan vom backend laden
         const scheduleResponse = await fetch(`${API_URL}/stundenplan-management/${klassenName}`);
         
         if (scheduleResponse.ok) {
@@ -146,25 +146,25 @@ const ClassEditor = () => {
           processScheduleData(scheduleData);
           setError(null);
         } else {
-          console.error(`Fehler beim Laden des Stundenplans für ${klassenName}`);
-          setError(`Fehler beim Laden des Stundenplans für ${klassenName}`);
+          console.error(`fehler beim laden des stundenplans fuer ${klassenName}`);
+          setError(`fehler beim laden des stundenplans fuer ${klassenName}`);
           setSchedule(Array(times.length).fill().map(() => Array(days.length).fill(null)));
         }
       } else {
-        setClassName('Klasse nicht gefunden');
-        setError('Die ausgewählte Klasse wurde nicht gefunden.');
+        setClassName('klasse nicht gefunden');
+        setError('die ausgewaehlte klasse wurde nicht gefunden.');
         setSchedule(Array(times.length).fill().map(() => Array(days.length).fill(null)));
       }
     } catch (error) {
-      console.error('Fehler beim Laden der Klassendaten:', error);
-      setError(`Fehler beim Laden der Klassendaten: ${error.message}`);
+      console.error('fehler beim laden der klassendaten:', error);
+      setError(`fehler beim laden der klassendaten: ${error.message}`);
       setSchedule(Array(times.length).fill().map(() => Array(days.length).fill(null)));
     } finally {
       setLoading(false);
     }
   };
 
-  // Hilfsfunktion: Formatieren des vollständigen Klassennamens
+  // hilfsfunktion: formatieren des vollstaendigen klassennamens
   const getFullClassName = (shortName) => {
     const classTypes = {
       "ITA": "Informatiktechnische Assistenten",
@@ -173,7 +173,7 @@ const ClassEditor = () => {
       "PTA": "Pharmazeutisch-technische Assistenten"
     };
     
-    // Extrahiere den Typ aus dem Kurznamen (z.B. "ITA" aus "ITA25")
+    // extrahiere den typ aus dem kurznamen (z.B. "ITA" aus "ITA25")
     const match = shortName.match(/^([A-Z]+)\d+/);
     if (match && match[1] && classTypes[match[1]]) {
       return classTypes[match[1]];
@@ -181,34 +181,34 @@ const ClassEditor = () => {
     return "Klasse";
   };
 
-  // Stundenplan-Daten vom Backend verarbeiten
+  // stundenplan-daten vom backend verarbeiten
   const processScheduleData = (data) => {
-    // Leeren Stundenplan erstellen
+    // leeren stundenplan erstellen
     const newSchedule = Array(times.length).fill().map(() => Array(days.length).fill(null));
     
-    // Tage-Mapping
+    // tage mapping
     const dayPrefixes = ['mo', 'di', 'mi', 'do', 'fr'];
     
-    // Für jede Stunde im Stundenplan
+    // fuer jede stunde im stundenplan
     data.forEach(hourData => {
-      const timeIndex = hourData.stunde - 1; // Stunde wird ab 1 gezählt
+      const timeIndex = hourData.stunde - 1; // stunde wird ab 1 gezaehlt
       
       if (timeIndex >= 0 && timeIndex < times.length) {
-        // Jeder Tag verarbeiten
+        // jeder tag verarbeiten
         dayPrefixes.forEach((prefix, dayIndex) => {
           const fachId = hourData[`fach_${prefix}`];
           
           if (fachId) {
-            // Fach, Raum und Lehrer IDs auslesen
+            // fach, raum und lehrer IDs auslesen
             const raumId = hourData[`raum_${prefix}`];
             const lehrerId = hourData[`lehrer_${prefix}`];
             
-            // Fach-Details ermitteln
+            // fach-details ermitteln
             const fach = subjectOptions.find(f => f.value === fachId);
             const raum = roomOptions.find(r => r.value === raumId);
             const lehrer = teacherOptions.find(l => l.value === lehrerId);
             
-            // In den Stundenplan eintragen
+            // in den stundenplan eintragen
             newSchedule[timeIndex][dayIndex] = {
               subject: fach ? fach.label.split(' (')[0] : 'Unbekannt',
               teacher: lehrer ? lehrer.label.split(' (')[0] : 'Unbekannt',
@@ -225,7 +225,7 @@ const ClassEditor = () => {
     setSchedule(newSchedule);
   };
 
-  // Modal zum Bearbeiten öffnen
+  // modal zum bearbeiten oeffnen
   const openModal = (timeIndex, dayIndex) => {
     const cellData = schedule[timeIndex][dayIndex] || { subject: '', teacher: '', room: '' };
     setSelectedCell({ timeIndex, dayIndex });
@@ -233,13 +233,13 @@ const ClassEditor = () => {
     setIsModalOpen(true);
   };
 
-  // Modal schließen
+  // modal schliessen
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedCell({ timeIndex: -1, dayIndex: -1 });
   };
 
-  // Auswahl im Modal ändern
+  // auswahl im modal aendern
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -248,30 +248,30 @@ const ClassEditor = () => {
     }));
   };
 
-  // Klassenauswahl ändern
+  // klassenauswahl
   const handleClassChange = (e) => {
     setSelectedKlasse(e.target.value);
   };
 
-  // Formular absenden (Stundenplan aktualisieren)
+  // formular absenden (stundenplan aktualisieren)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     
     try {
-      // Klassenname ermitteln
+      // klassenname ermitteln
       const selectedKlasseObj = klassenOptions.find(k => 
         String(k.klassen_id) === String(selectedKlasse)
       );
       
       if (!selectedKlasseObj) {
-        throw new Error('Klassenname konnte nicht ermittelt werden');
+        throw new Error('klassenname konnte nicht ermittelt werden');
       }
       
       const klassenName = selectedKlasseObj.name;
       
-      // Tag für API-Aufruf bestimmen
+      // tag fuer api-aufruf bestimmen
       const dayMapping = {
         0: "montag",
         1: "dienstag",
@@ -280,7 +280,7 @@ const ClassEditor = () => {
         4: "freitag"
       };
       
-      // IDs für Fach, Raum und Lehrer ermitteln
+      // ids ermitteln
       const fachOption = subjectOptions.find(option => option.label.startsWith(formData.subject));
       const raumOption = roomOptions.find(option => option.label.startsWith(formData.room));
       const lehrerOption = teacherOptions.find(option => option.label.startsWith(formData.teacher));
@@ -289,7 +289,7 @@ const ClassEditor = () => {
       const raumId = raumOption ? raumOption.value : null;
       const lehrerId = lehrerOption ? lehrerOption.value : null;
       
-      // API-Aufruf zum Aktualisieren
+      // api-aufruf zum aktualisieren
       const response = await fetch(`${API_URL}/stundenplan-management/unterricht`, {
         method: 'POST',
         headers: {
@@ -297,7 +297,7 @@ const ClassEditor = () => {
         },
         body: JSON.stringify({
           klassenName,
-          stunde: selectedCell.timeIndex + 1, // Stunde ist 1-basiert
+          stunde: selectedCell.timeIndex + 1, // stunde ist 1-basiert
           tag: dayMapping[selectedCell.dayIndex],
           fachId,
           raumId,
@@ -307,14 +307,14 @@ const ClassEditor = () => {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Fehler beim Speichern');
+        throw new Error(errorData.message || 'fehler beim speichern');
       }
       
-      // Erfolg!
-      setSuccessMessage('Stundenplan erfolgreich aktualisiert');
+      // erfolg!
+      setSuccessMessage('stundenplan erfolgreich aktualisiert');
       setTimeout(() => setSuccessMessage(null), 3000);
       
-      // Lokalen Stundenplan aktualisieren
+      // lokalen stundenplan aktualisieren
       const newSchedule = [...schedule];
       newSchedule[selectedCell.timeIndex][selectedCell.dayIndex] = { 
         ...formData,
@@ -324,16 +324,16 @@ const ClassEditor = () => {
       };
       setSchedule(newSchedule);
       
-      // Modal schließen
+      // modal schliessen
       closeModal();
       
-      // Stundenplan neu laden
+      // stundenplan neu laden
       loadClassData(selectedKlasse);
     } catch (err) {
-      console.error('Fehler beim Speichern des Unterrichts:', err);
-      setError(`Fehler beim Speichern: ${err.message}`);
+      console.error('fehler beim speichern des unterrichts:', err);
+      setError(`fehler beim speichern: ${err.message}`);
       
-      // Lokalen Stundenplan aktualisieren (Fallback)
+      // lokalen stundenplan aktualisieren (fallback)
       const newSchedule = [...schedule];
       newSchedule[selectedCell.timeIndex][selectedCell.dayIndex] = { ...formData };
       setSchedule(newSchedule);
@@ -344,24 +344,24 @@ const ClassEditor = () => {
     }
   };
 
-  // Unterricht löschen
+  // unterricht loeschen
   const handleDelete = async () => {
     setLoading(true);
     setError(null);
     
     try {
-      // Klassenname ermitteln
+      // klassenname ermitteln
       const selectedKlasseObj = klassenOptions.find(k => 
         String(k.klassen_id) === String(selectedKlasse)
       );
       
       if (!selectedKlasseObj) {
-        throw new Error('Klassenname konnte nicht ermittelt werden');
+        throw new Error('klassenname konnte nicht ermittelt werden');
       }
       
       const klassenName = selectedKlasseObj.name;
       
-      // Tag für API-Aufruf bestimmen
+      // tag fuer api-aufruf bestimmen
       const dayMapping = {
         0: "montag",
         1: "dienstag",
@@ -370,7 +370,7 @@ const ClassEditor = () => {
         4: "freitag"
       };
       
-      // API-Aufruf zum Löschen
+      // api-aufruf zum loeschen
       const response = await fetch(`${API_URL}/stundenplan-management/unterricht`, {
         method: 'DELETE',
         headers: {
@@ -378,35 +378,35 @@ const ClassEditor = () => {
         },
         body: JSON.stringify({
           klassenName,
-          stunde: selectedCell.timeIndex + 1, // Stunde ist 1-basiert
+          stunde: selectedCell.timeIndex + 1, // stunde ist 1-basiert
           tag: dayMapping[selectedCell.dayIndex]
         })
       });
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Fehler beim Löschen');
+        throw new Error(errorData.message || 'fehler beim loeschen');
       }
       
-      // Erfolg!
-      setSuccessMessage('Unterricht erfolgreich gelöscht');
+      // erfolg!
+      setSuccessMessage('unterricht erfolgreich geloescht');
       setTimeout(() => setSuccessMessage(null), 3000);
       
-      // Lokalen Stundenplan aktualisieren
+      // lokalen stundenplan aktualisieren
       const newSchedule = [...schedule];
       newSchedule[selectedCell.timeIndex][selectedCell.dayIndex] = null;
       setSchedule(newSchedule);
       
-      // Modal schließen
+      // modal schliessen
       closeModal();
       
-      // Stundenplan neu laden
+      // stundenplan neu laden
       loadClassData(selectedKlasse);
     } catch (err) {
-      console.error('Fehler beim Löschen des Unterrichts:', err);
-      setError(`Fehler beim Löschen: ${err.message}`);
+      console.error('fehler beim loeschen des unterrichts:', err);
+      setError(`fehler beim loeschen: ${err.message}`);
       
-      // Lokalen Stundenplan aktualisieren (Fallback)
+      // lokalen stundenplan aktualisieren (fallback)
       const newSchedule = [...schedule];
       newSchedule[selectedCell.timeIndex][selectedCell.dayIndex] = null;
       setSchedule(newSchedule);
@@ -417,9 +417,9 @@ const ClassEditor = () => {
     }
   };
 
-  // Stundenplan speichern
+  // stundenplan speichern
   const saveSchedule = async () => {
-    setSuccessMessage('Stundenplan gespeichert!');
+    setSuccessMessage('stundenplan gespeichert!');
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
@@ -428,7 +428,7 @@ const ClassEditor = () => {
       <div className="editor-header">
         <h2>Stundenplanverwaltung</h2>
         
-        {/* Klassenauswahl-Dropdown hinzufügen */}
+        {/* klassenauswahl */}
         <div className="class-selector">
           <select 
             value={selectedKlasse || ''} 
@@ -436,7 +436,7 @@ const ClassEditor = () => {
             className="class-select"
             disabled={loading}
           >
-            <option value="">Klasse auswählen...</option>
+            <option value="">Klasse auswaehlen...</option>
             {klassenOptions.map(klasse => (
               <option key={klasse.klassen_id} value={klasse.klassen_id}>
                 {klasse.name} - {getFullClassName(klasse.name)}
@@ -466,7 +466,7 @@ const ClassEditor = () => {
         </div>
       ) : selectedKlasse ? (
         <div>
-          <h2>Stundenplan für {className}</h2>
+          <h2>Stundenplan fuer {className}</h2>
           
           <div className="schedule-grid">
             {/* header */}
@@ -510,11 +510,11 @@ const ClassEditor = () => {
         </div>
       ) : (
         <div className="no-class-selected" style={{ textAlign: 'center', padding: '40px', backgroundColor: '#f8f9fa', borderRadius: '8px', marginTop: '20px' }}>
-          <p>Bitte wählen Sie eine Klasse aus dem Dropdown-Menü, um deren Stundenplan zu bearbeiten.</p>
+          <p>Bitte waehlen Sie eine Klasse aus dem Dropdown-Menue, um deren Stundenplan zu bearbeiten.</p>
         </div>
       )}
 
-      {/* Modal für die Bearbeitung */}
+      {/* modal */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -534,7 +534,7 @@ const ClassEditor = () => {
                   className="form-select"
                   disabled={loading}
                 >
-                  <option value="">Bitte wählen...</option>
+                  <option value="">Bitte waehlen...</option>
                   {subjectOptions.map(option => (
                     <option key={option.value} value={option.label.split(' (')[0]}>
                       {option.label}
@@ -553,7 +553,7 @@ const ClassEditor = () => {
                   className="form-select"
                   disabled={loading}
                 >
-                  <option value="">Bitte wählen...</option>
+                  <option value="">Bitte waehlen...</option>
                   {teacherOptions.map(option => (
                     <option key={option.value} value={option.label.split(' (')[0]}>
                       {option.label}
@@ -572,7 +572,7 @@ const ClassEditor = () => {
                   className="form-select"
                   disabled={loading}
                 >
-                  <option value="">Bitte wählen...</option>
+                  <option value="">Bitte waehlen...</option>
                   {roomOptions.map(option => (
                     <option key={option.value} value={option.label.split(' (')[0]}>
                       {option.label}
@@ -588,7 +588,7 @@ const ClassEditor = () => {
                   onClick={handleDelete}
                   disabled={loading}
                 >
-                  <span className="button-icon">🗑️</span> Löschen
+                  <span className="button-icon">🗑️</span> Loeschen
                 </button>
                 <div className="action-buttons">
                   <button 

@@ -1,5 +1,3 @@
-// src/notification.jsx - mit nicht anklickbaren Benachrichtigungen
-
 import React, { useState, useEffect, useRef } from 'react';
 import './styles/notification.css';
 
@@ -13,33 +11,32 @@ const Notification = ({ bellIcon }) => {
   const triggerRef = useRef(null);
   const API_URL = 'http://localhost:3001/api';
 
-  // Lade Benachrichtigungen beim Laden der Komponente
+  // initialisierung
   useEffect(() => {
     fetchNotifications();
   }, []);
 
-  // Benachrichtigungen vom Backend abrufen
+  // daten vom server
   const fetchNotifications = async () => {
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}/notifications`);
       
-      // Bei erfolgreicher Antwort die Benachrichtigungen setzen
       if (response.ok) {
         const data = await response.json();
-        console.log("Geladene Benachrichtigungen:", data); // Debug-Ausgabe
+        console.log("geladene benachrichtigungen:", data);
         setNotifications(data);
         
-        // Prüfe auf ungelesene Nachrichten
+        // check ob ungelesene
         const readStatus = getReadStatusFromCookies();
         checkForUnreadNotifications(data, readStatus);
       } else {
-        // Bei Fehlern Fallback zu Demo-Daten
-        console.error('Fehler beim Laden der Benachrichtigungen:', response.status);
+        // fallback
+        console.error('fehler beim laden der benachrichtigungen:', response.status);
         setDemoNotifications();
       }
     } catch (error) {
-      console.error('Fehler beim Laden der Benachrichtigungen:', error);
+      console.error('fehler beim laden der benachrichtigungen:', error);
       setDemoNotifications();
     } finally {
       setLoading(false);
@@ -49,28 +46,28 @@ const Notification = ({ bellIcon }) => {
 
 
 useEffect(() => {
-  // Initiale Abfrage der Benachrichtigungen
+  // regelmassig updaten
   fetchNotifications();
   
-  // Echtzeit-Updates alle 10 Sekunden
+  // alle 10sek updaten
   const updateInterval = setInterval(() => {
     fetchNotifications();
-  }, 10000); // 10000 ms = 10 Sekunden
+  }, 10000);
   
-  // Aufräumen, wenn die Komponente unmontiert wird
+  // cleanup
   return () => {
     clearInterval(updateInterval);
   };
 }, []);
 
-  // Lade Demo-Benachrichtigungen, falls der Server-Aufruf fehlschlägt
+  // demo daten
   const setDemoNotifications = () => {
     const demoNotifications = [
       {
         notification_id: "1",
         title: "Sekretariat",
-        message: "Neuer Stundenplan für nächste Woche verfügbar",
-        time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // vor 2 Stunden
+        message: "Neuer Stundenplan fuer naechste Woche verfuegbar",
+        time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
         formattedTime: "vor 2 Stunden",
         read: false,
         avatar: "S"
@@ -78,8 +75,8 @@ useEffect(() => {
       {
         notification_id: "2",
         title: "Klassenlehrer",
-        message: "Elternabend am 15. März um 19:00 Uhr",
-        time: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // vor 5 Stunden
+        message: "Elternabend am 15. Maerz um 19:00 Uhr",
+        time: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
         formattedTime: "vor 5 Stunden",
         read: false,
         avatar: "K"
@@ -87,41 +84,41 @@ useEffect(() => {
       {
         notification_id: "3",
         title: "Schuldirektor",
-        message: "Schulausflug zum Technikmuseum am 20. März",
-        time: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // vor 1 Tag
+        message: "Schulausflug zum Technikmuseum am 20. Maerz",
+        time: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
         formattedTime: "vor 1 Tag",
         read: false,
         avatar: "D"
       }
     ];
     
-    console.log("Demo-Benachrichtigungen gesetzt:", demoNotifications); // Debug-Ausgabe
+    console.log("demo-benachrichtigungen gesetzt:", demoNotifications);
     setNotifications(demoNotifications);
     
-    // Prüfe auf ungelesene Nachrichten
+    // check auf ungelesene
     const readStatus = getReadStatusFromCookies();
     checkForUnreadNotifications(demoNotifications, readStatus);
   };
 
-  // Hole Lese-Status aus Cookies
+  // lese-status aus cookies
   const getReadStatusFromCookies = () => {
     const cookieValue = getCookie('readNotifications');
     if (cookieValue) {
       try {
         return JSON.parse(cookieValue);
       } catch (error) {
-        console.error('Fehler beim Parsen der Lese-Status aus Cookie:', error);
+        console.error('fehler beim parsen der lese-status aus cookie:', error);
         return {};
       }
     }
     return {};
   };
 
-  // Prüfe auf ungelesene Nachrichten
+  // pruefe auf ungelesene
   const checkForUnreadNotifications = (notificationList = [], readStatus = {}) => {
-    // Sicherstellen, dass notificationList ein Array ist
+    // array check
     if (!Array.isArray(notificationList)) {
-      console.error('notificationList ist kein Array:', notificationList);
+      console.error('notificationList ist kein array:', notificationList);
       notificationList = [];
     }
     
@@ -131,10 +128,10 @@ useEffect(() => {
     setHasUnread(hasUnreadMessages);
   };
 
-  // Markiere alle Benachrichtigungen als gelesen, wenn das Panel geöffnet wird
+  // markiere als gelesen
   useEffect(() => {
     if (isOpen && hasUnread) {
-      // Markiere alle Benachrichtigungen als gelesen, wenn das Panel geöffnet wird
+      // alle als gelesen markieren
       const readStatus = getReadStatusFromCookies();
       
       let updated = false;
@@ -149,7 +146,7 @@ useEffect(() => {
         setCookie('readNotifications', JSON.stringify(readStatus), 30);
         setHasUnread(false);
         
-        // Aktualisiere den read-Status in der Benachrichtigungsliste
+        // update in liste
         setNotifications(notifications.map(notification => ({
           ...notification,
           read: true
@@ -158,13 +155,13 @@ useEffect(() => {
     }
   }, [isOpen, hasUnread, notifications]);
 
-  // Toggle notification panel
+  // panel anzeigen/verstecken
   const togglePanel = (e) => {
     e.stopPropagation();
     setIsOpen(!isOpen);
   };
 
-  // Schließe das Panel, wenn außerhalb geklickt wird
+  // klick ausserhalb schliesst
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -184,7 +181,7 @@ useEffect(() => {
     };
   }, [isOpen]);
 
-  // Schließe das Panel, wenn ESC gedrückt wird
+  // escape key
   useEffect(() => {
     const handleEscKey = (event) => {
       if (event.key === 'Escape' && isOpen) {
@@ -198,7 +195,7 @@ useEffect(() => {
     };
   }, [isOpen]);
 
-  // Cookie-Hilfsfunktionen
+  // cookie helpers
   const setCookie = (name, value, days) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
@@ -216,7 +213,7 @@ useEffect(() => {
     return null;
   };
 
-  // Überprüfe, ob eine Benachrichtigung als gelesen markiert wurde
+  // ist gelesen?
   const isNotificationRead = (id) => {
     const readStatus = getReadStatusFromCookies();
     return readStatus[id] === true;
@@ -224,7 +221,7 @@ useEffect(() => {
 
   return (
     <>
-      {/* Bell icon mit rotem Punkt für ungelesene Nachrichten */}
+      {/* glocke mit rotem punkt */}
       <div 
         className="notification-trigger" 
         onClick={togglePanel}
@@ -234,7 +231,7 @@ useEffect(() => {
         {hasUnread && <span className="notification-dot"></span>}
       </div>
 
-      {/* Notification panel */}
+      {/* benachrichtigungspanel */}
       <div 
         ref={panelRef}
         className={`notification-panel ${isOpen ? 'open' : ''}`}
@@ -253,7 +250,6 @@ useEffect(() => {
               <div 
                 key={notification.notification_id} 
                 className={`notification-item ${notification.read || isNotificationRead(notification.notification_id) ? 'read' : ''}`}
-                // Wir entfernen den onClick-Handler, um die Benachrichtigungen nicht klickbar zu machen
               >
                 <div className="notification-avatar">
                   <span className="notification-avatar-letter">

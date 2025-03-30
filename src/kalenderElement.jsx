@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState } from 'react';
 import "./styles/kalenderElement.css";
 
@@ -7,7 +5,7 @@ const Kalender = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const today = new Date();
     
-    
+    // helper
     const getDaysInMonth = (date) => {
         return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     };
@@ -21,7 +19,7 @@ const Kalender = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
     };
 
-    // formatierung
+    // format helpers
     const formatMonth = (date) => {
         return date.toLocaleString('de-DE', { month: 'long', year: 'numeric' });
     };
@@ -31,17 +29,18 @@ const Kalender = () => {
         return date.toLocaleString('de-DE', { weekday: 'short' });
     };
 
+    // ist tag vergangen?
     const isPastDay = (day) => {
         const checkDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
         return checkDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
     };
 
-    // Kalendertage generieren
+    // tage fuer kalender
     const generateCalendarDays = () => {
         const daysInMonth = getDaysInMonth(currentDate);
         const days = [];
 
-        // Nur Tage des aktuellen Monats
+        // nur tage dieses monats
         for (let day = 1; day <= daysInMonth; day++) {
             const weekDay = getWeekDay(
                 currentDate.getFullYear(),
