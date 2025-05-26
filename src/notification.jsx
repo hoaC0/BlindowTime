@@ -49,7 +49,7 @@ useEffect(() => {
   // regelmassig updaten
   fetchNotifications();
   
-  // alle 10sek updaten
+  // alle 10sek updaten!!
   const updateInterval = setInterval(() => {
     fetchNotifications();
   }, 10000);

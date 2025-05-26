@@ -1,60 +1,70 @@
+// src/dashboard.jsx
 import React, { useState, useEffect } from 'react';
 import './styles/dashboard.css';
 import MensaElement from './mensaElement.jsx';
 
 const Dashboard = () => {
-    // state fuer tasks aus den cookies
+    // State für Tasks aus den Cookies
     const [tasks, setTasks] = useState([]);
     
-    // state fuer stundenplan
+    // State für Kalender-Events
+    const [calendarEvents, setCalendarEvents] = useState([]);
+    
+    // State für Stundenplan
     const [ausgewaehlteKlasse, setAusgewaehlteKlasse] = useState('');
     const [naechsteStunden, setNaechsteStunden] = useState([]);
     const [aktuelleStunde, setAktuelleStunde] = useState(null);
     const [ladenStundenplan, setLadenStundenplan] = useState(false);
     const [fehlerStundenplan, setFehlerStundenplan] = useState(null);
     
-    // api-url fuer backend-anfragen
+    // API-URL für Backend-Anfragen
     const API_URL = 'http://localhost:3001/api';
     
-    // aktuelles datum und aktuelle woche
+    // Aktuelles Datum und aktuelle Woche
     const currentDate = new Date();
-    const currentDay = currentDate.getDay(); // 0 = sonntag, 1 = montag, ...
+    const currentDay = currentDate.getDay(); // 0 = Sonntag, 1 = Montag, ...
     
-    // wochentag-namen
+    // Wochentag-Namen
     const weekDays = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
     
-    // aktualle kalenderwoche generieren (7 tage)
+    // Aktuelle Kalenderwoche generieren (7 Tage)
     const generateWeekDays = () => {
         const days = [];
         const today = new Date();
         
-        // startdatum berechnen (montag dieser woche)
+        // Startdatum berechnen (Montag dieser Woche)
         const monday = new Date(today);
-        const dayOfWeek = today.getDay() || 7; // wenn heute sonntag (0) ist, wird 7 verwendet
+        const dayOfWeek = today.getDay() || 7; // Wenn heute Sonntag (0) ist, wird 7 verwendet
         monday.setDate(today.getDate() - dayOfWeek + 1);
         
-        // 7 tage generieren
+        // 7 Tage generieren
         for (let i = 0; i < 7; i++) {
             const day = new Date(monday);
             day.setDate(monday.getDate() + i);
+            
+            // Events für diesen Tag finden
+            const dayEvents = calendarEvents.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate.toDateString() === day.toDateString();
+            });
+            
             days.push({
                 name: weekDays[day.getDay()].substring(0, 2),
                 number: day.getDate(),
                 month: day.getMonth(),
                 isToday: day.toDateString() === today.toDateString(),
-                events: []
+                events: dayEvents.map(event => ({
+                    title: event.title,
+                    time: event.time,
+                    color: event.color
+                }))
             });
         }
-        
-        // beispiel-events hinzufuegen
-        days[1].events.push("Mathe Klausur");
-        days[3].events.push("Gruppenprojekt");
-        days[4].events.push("Bio Referat");
         
         return days;
     };
     
-    // tasks laden beim erststart
+    // Tasks aus den Cookies laden
     useEffect(() => {
         const savedTasks = getCookie('tasks');
         if (savedTasks) {
@@ -62,25 +72,36 @@ const Dashboard = () => {
                 const parsedTasks = JSON.parse(savedTasks);
                 setTasks(parsedTasks);
             } catch (error) {
-                console.error('error parsing tasks from cookie:', error);
+                console.error('Error parsing tasks from cookie:', error);
             }
         }
 
-        // klasse aus cookie holen
+        // Gespeicherte Klassenauswahl laden
         const gespeicherteKlasse = getCookie('selectedClass');
         if (gespeicherteKlasse) {
             setAusgewaehlteKlasse(gespeicherteKlasse);
         }
+        
+        // Kalender-Events laden
+        const savedEvents = getCookie('calendarEvents');
+        if (savedEvents) {
+            try {
+                const parsedEvents = JSON.parse(savedEvents);
+                setCalendarEvents(parsedEvents);
+            } catch (error) {
+                console.error('Error parsing events from cookie:', error);
+            }
+        }
     }, []);
 
-    // wenn klasse geaendert, stundenplan neu laden
+    // Wenn die ausgewählte Klasse sich ändert, lade die Stunden
     useEffect(() => {
         if (ausgewaehlteKlasse) {
             stundenLaden();
         }
     }, [ausgewaehlteKlasse]);
     
-    // cookies holen helper
+    // Cookie-Hilfsfunktion
     const getCookie = (name) => {
         const nameEQ = `${name}=`;
         const ca = document.cookie.split(';');
@@ -92,7 +113,7 @@ const Dashboard = () => {
         return null;
     };
     
-    // task erledigung umschalten
+    // Tasks Status umschalten
     const toggleTaskComplete = (id) => {
         const updatedTasks = tasks.map(task =>
             task.id === id ? { ...task, completed: !task.completed } : task
@@ -101,14 +122,14 @@ const Dashboard = () => {
         setCookie('tasks', JSON.stringify(updatedTasks), 30);
     };
     
-    // cookie setzen
+    // Cookie-Setzen-Hilfsfunktion
     const setCookie = (name, value, days) => {
         const expires = new Date();
         expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
         document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
     };
 
-    // stundenplan vom server holen
+    // Stundenplan vom Backend laden
     const stundenLaden = async () => {
         setLadenStundenplan(true);
         setFehlerStundenplan(null);
@@ -117,31 +138,32 @@ const Dashboard = () => {
             const antwort = await fetch(`${API_URL}/stundenplan/${ausgewaehlteKlasse}`);
             
             if (!antwort.ok) {
-                throw new Error(`fehler beim laden des stundenplans: ${antwort.status}`);
+                throw new Error(`Fehler beim Laden des Stundenplans: ${antwort.status}`);
             }
             
             const stundenplanDaten = await antwort.json();
             verarbeiteStundenplanDaten(stundenplanDaten);
         } catch (error) {
-            console.error('fehler beim laden des stundenplans:', error);
+            console.error('Fehler beim Laden des Stundenplans:', error);
             setFehlerStundenplan(error.message);
-            // dummy daten nutzen wenn server weg
+            // Fallback: Mock-Daten für die Entwicklung
             ladeMockStunden();
         } finally {
             setLadenStundenplan(false);
         }
     };
 
+    // Mock-Daten für die Entwicklung (falls Backend nicht verfügbar)
     const ladeMockStunden = () => {
         const mockStunden = [
-            { nummer: 1, fach: 'Mathematik', zeit: '08:00 - 08:45', lehrer: 'Fr. Mueller', raum: '101' },
-            { nummer: 2, fach: 'Mathematik', zeit: '08:45 - 09:30', lehrer: 'Fr. Mueller', raum: '101' },
+            { nummer: 1, fach: 'Mathematik', zeit: '08:00 - 08:45', lehrer: 'Fr. Müller', raum: '101' },
+            { nummer: 2, fach: 'Mathematik', zeit: '08:45 - 09:30', lehrer: 'Fr. Müller', raum: '101' },
             { nummer: 3, fach: 'Deutsch', zeit: '09:45 - 10:30', lehrer: 'Hr. Schmidt', raum: '203' },
             { nummer: 4, fach: 'Englisch', zeit: '10:30 - 11:15', lehrer: 'Fr. Weber', raum: '105' },
             { nummer: 5, fach: 'Physik', zeit: '11:30 - 12:15', lehrer: 'Hr. Fischer', raum: '204' }
         ];
         
-        // aktuelle zeit fuer bestimmung der aktuellen stunde
+        // Aktuelle Zeit für Bestimmung der aktuellen Stunde
         const jetzt = new Date();
         const aktuelleStundeIndex = bestimmeAktuelleStundeIndex(jetzt);
         
@@ -154,31 +176,31 @@ const Dashboard = () => {
         setNaechsteStunden(mockStunden);
     };
 
-    // verarbeitet stundenplan daten
+    // Verarbeitet die Stundenplan-Daten um aktuelle und nächste Stunden zu ermitteln
     const verarbeiteStundenplanDaten = (stundenplanDaten) => {
-        // check ob heute wochenende
+        // Aktuellen Tag bestimmen (0 = Sonntag, 1 = Montag, ...)
         const jetzt = new Date();
         const aktuellerTag = jetzt.getDay();
         
-        // wochenende - kein unterricht
+        // Am Wochenende gibt es keinen Unterricht
         if (aktuellerTag === 0 || aktuellerTag === 6) {
             setAktuelleStunde(null);
             setNaechsteStunden([]);
             return;
         }
         
-        // index fuer den aktuellen tag bestimmen (0 = montag)
+        // Index für den aktuellen Tag im Stundenplan (0 = Montag)
         const tagIndex = aktuellerTag - 1;
         const tagPrefix = ['mo', 'di', 'mi', 'do', 'fr'][tagIndex];
         
-        // stunden fuer den aktuellen tag extrahieren
+        // Stunden für den aktuellen Tag extrahieren
         const heutigeStunden = [];
         
-        // stundenplanzeilen durchgehen
+        // Stundenplanzeilen durchgehen (sortiert nach stunde)
         stundenplanDaten.forEach(zeile => {
             const fachId = zeile[`fach_${tagPrefix}`];
             
-            // nur wenn ein fach fuer diesen tag eingetragen ist
+            // Nur wenn ein Fach für diesen Tag eingetragen ist
             if (fachId) {
                 heutigeStunden.push({
                     nummer: zeile.stunde,
@@ -191,10 +213,10 @@ const Dashboard = () => {
             }
         });
         
-        // sortieren nach stundennummer
+        // Sortieren nach Stundennummer
         heutigeStunden.sort((a, b) => a.nummer - b.nummer);
         
-        // aktuelle stunde bestimmen
+        // Aktuelle Stunde bestimmen
         const aktuelleStundeIndex = bestimmeAktuelleStundeIndex(jetzt);
         
         if (aktuelleStundeIndex !== -1 && aktuelleStundeIndex < heutigeStunden.length) {
@@ -206,7 +228,7 @@ const Dashboard = () => {
         setNaechsteStunden(heutigeStunden);
     };
 
-    // welche stunde is aktuell?
+    // Bestimmt den Index der aktuellen Stunde basierend auf der Uhrzeit
     const bestimmeAktuelleStundeIndex = (jetzt) => {
         const stundenZeiten = [
             { start: '08:00', ende: '08:45' },
@@ -228,7 +250,7 @@ const Dashboard = () => {
         const minuten = jetzt.getMinutes();
         const aktuelleZeit = `${stunden.toString().padStart(2, '0')}:${minuten.toString().padStart(2, '0')}`;
         
-        // finde die aktuelle stunde
+        // Finde die aktuelle Stunde
         for (let i = 0; i < stundenZeiten.length; i++) {
             const { start, ende } = stundenZeiten[i];
             
@@ -236,7 +258,8 @@ const Dashboard = () => {
                 return i;
             }
             
-            // zwischen stunden
+            // Wenn die aktuelle Zeit zwischen zwei Unterrichtsstunden liegt,
+            // gib die nächste Stunde zurück
             if (i < stundenZeiten.length - 1) {
                 const naechsterStart = stundenZeiten[i + 1].start;
                 if (aktuelleZeit > ende && aktuelleZeit < naechsterStart) {
@@ -245,28 +268,28 @@ const Dashboard = () => {
             }
         }
         
-        // vor den stunden
+        // Wenn die aktuelle Zeit vor der ersten Stunde liegt, gib die erste Stunde zurück
         if (aktuelleZeit < stundenZeiten[0].start) {
             return 0;
         }
         
-        // nach allen stunden
+        // Wenn die aktuelle Zeit nach der letzten Stunde liegt, gib -1 zurück
         return -1;
     };
     
-    // kalenderwoche
+    // Aktuelle Woche generieren
     const weekDaysData = generateWeekDays();
     
-    // nur 5 offene zeigen statt alle
+    // Aufgaben filtern - zeige nur die ersten 5 nicht erledigten Aufgaben
     const pendingTasks = tasks
         .filter(task => !task.completed)
         .slice(0, 5);
     
     return (
         <div className="dashboard-container">
-            {/* karten grid */}
+            {/* Top three cards in the original grid */}
             <div className="dashboard-grid">
-                {/* todo karte */}
+                {/* ToDo-Karte */}
                 <div className="dashboard-card">
                     <div className="card-header">
                         <h2>Aufgabenliste</h2>
@@ -296,13 +319,13 @@ const Dashboard = () => {
                         ) : (
                             <div className="empty-state">
                                 <p>Keine offenen Aufgaben</p>
-                                <a href="todo.html" className="add-new">Aufgabe hinzufuegen</a>
+                                <a href="todo.html" className="add-new">Aufgabe hinzufügen</a>
                             </div>
                         )}
                     </div>
                 </div>
                 
-                {/* kalender karte */}
+                {/* Kalender-Karte */}
                 <div className="dashboard-card">
                     <div className="card-header">
                         <h2>Kalender</h2>
@@ -310,7 +333,7 @@ const Dashboard = () => {
                             className="view-all"
                             onClick={() => window.location.href = 'kalender.html'}
                         >
-                            Vollstaendig
+                            Vollständig
                         </button>
                     </div>
                     <div className="card-content">
@@ -323,8 +346,22 @@ const Dashboard = () => {
                                     <div className="day-name">{day.name}</div>
                                     <div className="day-number">{day.number}</div>
                                     {day.events.map((event, eventIndex) => (
-                                        <div key={eventIndex} className="calendar-event">
-                                            {event}
+                                        <div 
+                                            key={eventIndex} 
+                                            className="calendar-event"
+                                            style={{ 
+                                                backgroundColor: event.color || '#0f3c63',
+                                                fontSize: '11px',
+                                                padding: '2px 4px',
+                                                borderRadius: '3px',
+                                                marginBottom: '2px',
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis'
+                                            }}
+                                            title={event.time ? `${event.title} um ${event.time}` : event.title}
+                                        >
+                                            {event.time ? `${event.time.substring(0, 5)} ` : ''}{event.title}
                                         </div>
                                     ))}
                                 </div>
@@ -333,7 +370,7 @@ const Dashboard = () => {
                     </div>
                 </div>
                 
-                {/* stundenplan karte */}
+                {/* Stundenplan-Karte */}
                 <div className="dashboard-card">
                     <div className="card-header">
                         <h2>Stundenplan</h2>
@@ -362,7 +399,7 @@ const Dashboard = () => {
                                         {aktuelleStunde && (
                                             <div className="next-class">
                                                 <div className="next-class-header">
-                                                    <h3 className="next-class-title">Naechste Stunde</h3>
+                                                    <h3 className="next-class-title">Nächste Stunde</h3>
                                                     <span className="class-time">{aktuelleStunde.zeit}</span>
                                                 </div>
                                                 <div className="class-details">
@@ -396,7 +433,7 @@ const Dashboard = () => {
                                                 ))
                                             ) : (
                                                 <div className="empty-schedule">
-                                                    <p>Keine Stunden fuer heute</p>
+                                                    <p>Keine Stunden für heute</p>
                                                 </div>
                                             )}
                                         </div>
@@ -405,8 +442,8 @@ const Dashboard = () => {
                                 
                                 {!fehlerStundenplan && !ausgewaehlteKlasse && (
                                     <div className="empty-state">
-                                        <p>Bitte waehle zuerst eine Klasse aus</p>
-                                        <a href="stundenplan.html" className="add-new">Klasse auswaehlen</a>
+                                        <p>Bitte wählen Sie zuerst eine Klasse aus</p>
+                                        <a href="stundenplan.html" className="add-new">Klasse auswählen</a>
                                     </div>
                                 )}
                             </>
@@ -415,7 +452,7 @@ const Dashboard = () => {
                 </div>
             </div>
             
-            {/* mensa element */}
+            {/* Mensa-Karte */}
             <MensaElement />
         </div>
     );

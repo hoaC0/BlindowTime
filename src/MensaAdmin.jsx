@@ -7,6 +7,7 @@ const MensaAdmin = () => {
   // api-url
   const API_URL = 'http://localhost:3001/api';
 
+  // state
   const [activeWeek, setActiveWeek] = useState(getCurrentWeek());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
